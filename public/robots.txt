@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Block admin/API routes from crawlers
+Disallow: /api/
+Disallow: /_server/
+Disallow: /search?*
+
+# Allow all major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Sitemap location
+Sitemap: https://indus-robotics.com/sitemap.xml
