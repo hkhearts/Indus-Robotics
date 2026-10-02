@@ -42,12 +42,12 @@ function buildResponse(intent, visitorCtx) {
 
   if (intent === "greeting") {
     if (isReturning && visitCount > 2) {
-      return `${greeting}${location}! Great to see you again — this is your visit #${visitCount}. ${lastPage && lastPage !== "/" ? `You were last exploring our ${lastPage.replace("/", "").replace(/-/g, " ")} section.` : ""} How can I help you today?`;
+      return `${greeting}! Great to see you again — this is your visit #${visitCount}. ${lastPage && lastPage !== "/" ? `You were last exploring our ${lastPage.replace("/", "").replace(/-/g, " ")} section.` : ""} How can I help you today?`;
     }
     if (isReturning) {
-      return `${greeting}! Good to have you back${location}. Looking for something specific today? I can help with products, pricing, or technical specs.`;
+      return `${greeting}! Good to have you back. Looking for something specific today? I can help with products, pricing, or technical specs.`;
     }
-    return `${greeting}! Welcome to Indus Robotics${location}. I'm your technical assistant. Ask me about our robotic arms, actuators, precision reducers, or request a quote!`;
+    return `${greeting}! Welcome to Indus Robotics. I'm your technical assistant. Ask me about our robotic arms, actuators, precision reducers, or request a quote!`;
   }
 
   if (intent === "pricing") {
@@ -92,22 +92,34 @@ export default async function handler(req, res) {
     // Log chat to Airtable
     const { AIRTABLE_TOKEN, AIRTABLE_BASE_ID } = process.env;
     if (AIRTABLE_TOKEN && AIRTABLE_BASE_ID) {
-      fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Chat%20Sessions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fields: {
-            "Visitor IP": visitorCtx?.ip || "unknown",
-            Message: message,
-            Timestamp: new Date().toISOString(),
-            "Session ID": visitorCtx?.recordId || "",
-            Country: visitorCtx?.geo?.country || "",
+      try {
+        const atRes = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Chat%20Sessions`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+            "Content-Type": "application/json",
           },
-        }),
-      }).catch(() => {});
+          body: JSON.stringify({
+            records: [
+              {
+                fields: {
+                  "Visitor IP": visitorCtx?.ip || "unknown",
+                  "Message": message,
+                  "Timestamp": new Date().toISOString(),
+                  "Session ID": visitorCtx?.sessionId || visitorCtx?.recordId || "",
+                  "Country": visitorCtx?.geo?.country || "",
+                },
+              },
+            ],
+          }),
+        });
+        if (!atRes.ok) {
+          const text = await atRes.text();
+          console.error("Airtable Chat Save Error:", text);
+        }
+      } catch (e) {
+        console.error("Airtable fetch failed:", e);
+      }
     }
 
     const intent = detectIntent(message);

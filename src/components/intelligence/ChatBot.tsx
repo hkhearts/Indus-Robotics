@@ -3,7 +3,7 @@
  */
 import React, { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, Loader2, ChevronDown } from "lucide-react";
-import type { VisitorData } from "@/lib/visitor";
+import { getGeoGreeting, type VisitorData } from "@/lib/visitor";
 
 interface Message {
   role: "user" | "bot";
@@ -35,12 +35,13 @@ export function ChatBot({ visitorData }: ChatBotProps) {
   // Initial bot greeting
   useEffect(() => {
     if (messages.length === 0) {
+      const timeGreeting = getGeoGreeting();
       const greeting = visitorData?.isReturning
-        ? `Welcome back${visitorData.geo?.city ? ` from ${visitorData.geo.city}` : ""}! Visit #${visitorData.visitCount}. How can I help you today?`
-        : "Hello! I'm your Indus Robotics assistant. Ask me about our products, pricing, or technical specs!";
+        ? `${timeGreeting}! Welcome back for visit #${visitorData.visitCount}. How can I help you today?`
+        : `${timeGreeting}! I'm your Indus Robotics assistant. Ask me about our products, pricing, or technical specs!`;
       setMessages([{ role: "bot", text: greeting, timestamp: new Date() }]);
     }
-  }, [visitorData]);
+  }, [visitorData, messages.length]);
 
   useEffect(() => {
     if (open) {
