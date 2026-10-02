@@ -44,6 +44,7 @@ export function getGeoGreeting(timezone?: string): string {
 
 // ── Fetch visitor data ────────────────────────────────────────────────────
 export async function fetchVisitorData(): Promise<VisitorData | null> {
+  if (typeof window === "undefined") return null;
   // Check localStorage cache (valid for 30 minutes)
   const cached = localStorage.getItem(STORAGE_KEY);
   if (cached) {
@@ -76,12 +77,14 @@ export async function updateVisitorPage(
       body: JSON.stringify({ recordId, lastPage, lastSection }),
     });
     // Update cache too
-    const cached = localStorage.getItem(STORAGE_KEY);
-    if (cached) {
-      const { data, ts } = JSON.parse(cached);
-      data.lastPage = lastPage;
-      if (lastSection) data.lastSection = lastSection;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, ts }));
+    if (typeof window !== "undefined") {
+      const cached = localStorage.getItem(STORAGE_KEY);
+      if (cached) {
+        const { data, ts } = JSON.parse(cached);
+        data.lastPage = lastPage;
+        if (lastSection) data.lastSection = lastSection;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, ts }));
+      }
     }
   } catch {
     // silently fail
@@ -90,6 +93,7 @@ export async function updateVisitorPage(
 
 // ── Preferences ───────────────────────────────────────────────────────────
 export function getPreferences(): Record<string, unknown> {
+  if (typeof window === "undefined") return {};
   try {
     return JSON.parse(localStorage.getItem(PREFS_KEY) || "{}");
   } catch {
@@ -98,6 +102,7 @@ export function getPreferences(): Record<string, unknown> {
 }
 
 export function setPreference(key: string, value: unknown): void {
+  if (typeof window === "undefined") return;
   const prefs = getPreferences();
   prefs[key] = value;
   localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
@@ -122,15 +127,19 @@ export function getMostViewedSection(): string | null {
 export type Theme = "dark" | "light" | "system";
 
 export function getTheme(): Theme {
+  if (typeof window === "undefined") return "system";
   return (localStorage.getItem("ir_theme") as Theme) || "system";
 }
 
 export function setTheme(theme: Theme): void {
-  localStorage.setItem("ir_theme", theme);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("ir_theme", theme);
+  }
   applyTheme(theme);
 }
 
 export function applyTheme(theme: Theme): void {
+  if (typeof window === "undefined") return;
   const isDark =
     theme === "dark" ||
     (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -139,6 +148,7 @@ export function applyTheme(theme: Theme): void {
 }
 
 export function initTheme(): void {
+  if (typeof window === "undefined") return;
   const theme = getTheme();
   applyTheme(theme);
   // Watch system preference changes
@@ -149,6 +159,7 @@ export function initTheme(): void {
 
 // ── Session tracking ─────────────────────────────────────────────────────
 export function getSessionId(): string {
+  if (typeof window === "undefined") return "ssr-session";
   let sid = sessionStorage.getItem("ir_sid");
   if (!sid) {
     sid = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
