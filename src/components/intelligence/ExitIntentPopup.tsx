@@ -13,23 +13,21 @@ export function ExitIntentPopup() {
 
   useEffect(() => {
     // Only intercept tab close if they haven't dismissed it
-    if (sessionStorage.getItem("ir_exit_shown")) return;
+    let triggered = false;
 
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Show native browser tab close dialog
-      e.preventDefault();
-      e.returnValue = "Are you sure you want to leave?";
-      
-      // We can also show our custom popup underneath so if they cancel, they see it
-      setVisible(true);
-      sessionStorage.setItem("ir_exit_shown", "1");
-      return "Are you sure you want to leave?";
+    const handleMouseLeave = (e: MouseEvent) => {
+      // Trigger when mouse moves up towards the tab bar/close button
+      if (e.clientY <= 10 && !triggered) {
+        triggered = true;
+        setVisible(true);
+        sessionStorage.setItem("ir_exit_shown", "1");
+      }
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
