@@ -46,8 +46,8 @@ export function GeoGreetingBar({ visitorData }: GeoGreetingBarProps) {
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4">
         {/* Geo greeting */}
         <div className="flex items-center gap-3">
-          <Globe size={12} className="shrink-0 text-signal" />
-          <p className="text-[10px] text-muted-foreground">
+          <Globe size={14} className="shrink-0 text-signal" />
+          <p className="text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">{greeting}</span>
             {currentTime && (
               <>
@@ -64,16 +64,16 @@ export function GeoGreetingBar({ visitorData }: GeoGreetingBarProps) {
             <div className="flex items-center gap-1.5">
               <span className="relative flex size-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-signal" />
+                <span className="relative inline-flex size-2 rounded-full bg-signal" />
               </span>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">{traffic.activeUsers}</span> active now
               </p>
             </div>
           )}
           {traffic.todayViews > 0 && (
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <TrendingUp size={10} className="text-signal" />
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <TrendingUp size={12} className="text-signal" />
               <span className="font-semibold text-foreground">{traffic.todayViews}</span> views today
             </div>
           )}

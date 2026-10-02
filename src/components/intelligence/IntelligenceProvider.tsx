@@ -110,7 +110,23 @@ export function IntelligenceProvider({ children }: { children: React.ReactNode }
     if (visitor?.recordId && currentPath) {
       updateVisitorPage(visitor.recordId, currentPath);
     }
-  }, [visitor?.recordId]);
+  }, [visitor?.recordId, currentPath]);
+
+  // Track scroll position for the current path
+  useEffect(() => {
+    let timeoutId: number;
+    const handleScroll = () => {
+      if (typeof window !== "undefined") {
+        // Debounce slightly for performance
+        cancelAnimationFrame(timeoutId);
+        timeoutId = requestAnimationFrame(() => {
+          localStorage.setItem(`ir_scroll_${currentPath}`, window.scrollY.toString());
+        });
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [currentPath]);
 
   const trackSection = (section: string) => {
     trackSectionView(section);

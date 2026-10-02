@@ -12,34 +12,24 @@ export function ExitIntentPopup() {
   const { openModal } = useModals();
 
   useEffect(() => {
-    // Don't show if already dismissed this session
+    // Only intercept tab close if they haven't dismissed it
     if (sessionStorage.getItem("ir_exit_shown")) return;
 
-    let triggered = false;
-
-    const handleMouseLeave = (e: MouseEvent) => {
-      // Only trigger when mouse goes to very top (browser bar / tab close)
-      if (e.clientY <= 5 && !triggered) {
-        triggered = true;
-        setVisible(true);
-        sessionStorage.setItem("ir_exit_shown", "1");
-      }
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Show native browser tab close dialog
+      e.preventDefault();
+      e.returnValue = "Are you sure you want to leave?";
+      
+      // We can also show our custom popup underneath so if they cancel, they see it
+      setVisible(true);
+      sessionStorage.setItem("ir_exit_shown", "1");
+      return "Are you sure you want to leave?";
     };
 
-    // Also trigger on mobile back button / visibility change
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden" && !triggered) {
-        triggered = true;
-        // Can't show popup when tab is hidden, but log it
-      }
-    };
-
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 

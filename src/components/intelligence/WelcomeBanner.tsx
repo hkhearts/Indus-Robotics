@@ -46,12 +46,32 @@ export function WelcomeBanner() {
 
   if (isNewUser) return null; // Only show for returning visitors
 
+  const handleResume = (e: React.MouseEvent, isSamePage: boolean) => {
+    if (isSamePage) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof window !== "undefined") {
+        const scrollPos = localStorage.getItem("ir_scroll_/");
+        if (scrollPos) {
+          window.scrollTo({ top: parseInt(scrollPos, 10), behavior: "smooth" });
+        }
+      }
+    } else {
+      // It's navigating to another page, but we can set a flag to scroll on mount if we want.
+      // For now, let the standard router handle it, but we also save the intent.
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("ir_resume_scroll", visitor.lastPage);
+      }
+    }
+    dismiss();
+  };
+
   const CardWrapper = ({ children }: { children: React.ReactNode }) => {
     if (visitor.lastPage && visitor.lastPage !== "/") {
       return (
         <Link
           to={visitor.lastPage as "/"}
-          onClick={dismiss}
+          onClick={(e) => handleResume(e, false)}
           className="block border border-signal/40 bg-surface-dark/98 p-4 shadow-[0_0_40px_oklch(0.65_0.22_250_/_0.15)] backdrop-blur-xl transition-transform hover:scale-105 hover:border-signal/60 cursor-pointer"
         >
           {children}
@@ -60,7 +80,7 @@ export function WelcomeBanner() {
     }
     return (
       <div
-        onClick={dismiss}
+        onClick={(e) => handleResume(e, true)}
         className="block border border-signal/40 bg-surface-dark/98 p-4 shadow-[0_0_40px_oklch(0.65_0.22_250_/_0.15)] backdrop-blur-xl transition-transform hover:scale-105 hover:border-signal/60 cursor-pointer"
       >
         {children}
@@ -109,17 +129,15 @@ export function WelcomeBanner() {
             : ""}
           {visitor.lastPage && visitor.lastPage !== "/"
             ? `Continue where you left off (${lastPageName}).`
-            : "Pick up where you left off."}
+            : "Continue where you left off."}
         </p>
 
         {/* Indicator */}
-        {visitor.lastPage && visitor.lastPage !== "/" && (
-          <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-signal">
-            <Clock size={10} />
-            <span>Click to resume</span>
-            <ArrowRight size={10} className="ml-1" />
-          </div>
-        )}
+        <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-signal">
+          <Clock size={10} />
+          <span>Click to resume</span>
+          <ArrowRight size={10} className="ml-1" />
+        </div>
       </CardWrapper>
     </div>
   );
