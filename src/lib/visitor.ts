@@ -4,6 +4,7 @@
  * - Fetches visitor data from /api/visitor on first load
  * - Persists session to localStorage
  * - Provides geo greeting, theme, last-page resume, preferences
+ * - Extended with 14 Intelligence Features
  */
 
 export interface VisitorGeo {
@@ -13,6 +14,63 @@ export interface VisitorGeo {
   currency: string;
   latitude: number;
   longitude: number;
+  region: string;
+  electricalStandard: "230V_50Hz" | "120V_60Hz" | "100V_50Hz" | "100V_60Hz" | "unknown";
+  complianceStandards: string[];
+}
+
+export interface FirmographicData {
+  companyName: string;
+  industry: string;
+  employeeCount: string;
+  revenueRange: string;
+  technologyStack: string[];
+  domain: string;
+  isTargetAccount: boolean;
+  accountTier: "strategic" | "target" | "general" | "unknown";
+}
+
+export interface CollaborativeIntelligence {
+  companyVisitorCount: number;
+  stakeholders: Array<{
+    ip: string;
+    role: "engineer" | "manager" | "procurement" | "executive" | "unknown";
+    pagesVisited: string[];
+    lastActive: string;
+  }>;
+  hasWorkspace: boolean;
+  workspaceId?: string;
+}
+
+export interface IntentScore {
+  score: number;
+  stage: "researching" | "evaluating" | "buying";
+  signals: string[];
+  lastUpdated: string;
+  triggeredAlerts: string[];
+}
+
+export interface PurchaseHistory {
+  products: Array<{
+    productId: string;
+    productName: string;
+    category: string;
+    purchaseDate: string;
+    quantity: number;
+    maintenanceIntervalHours: number;
+    hoursSincePurchase: number;
+    nextMaintenanceDue: string;
+  }>;
+  totalOrders: number;
+  lastOrderDate: string;
+}
+
+export interface SupplyChainStatus {
+  productId: string;
+  inStock: boolean;
+  leadTimeWeeks: number;
+  alternativeProductId?: string;
+  alternativeReason?: string;
 }
 
 export interface VisitorData {
@@ -25,6 +83,27 @@ export interface VisitorData {
   geo: VisitorGeo;
   recordId: string;
   name: string;
+  firmographic: FirmographicData | null;
+  collaborative: CollaborativeIntelligence | null;
+  intent: IntentScore;
+  purchaseHistory: PurchaseHistory | null;
+  supplyChain: SupplyChainStatus[];
+  readingBehavior: {
+    scrollVelocity: "fast" | "normal" | "slow";
+    hoverDepth: number;
+    timeOnPage: number;
+    sectionsRead: string[];
+  };
+  documentContext: {
+    lastDownloaded: string | null;
+    lastDownloadedCategory: string | null;
+    interestedTopics: string[];
+  };
+  escalation: {
+    needsHumanReview: boolean;
+    ticketId?: string;
+    complexityScore: number;
+  };
 }
 
 const STORAGE_KEY = "ir_visitor";
@@ -120,6 +199,133 @@ export function getMostViewedSection(): string | null {
   const views = (prefs["sectionViews"] as Record<string, number>) || {};
   if (!Object.keys(views).length) return null;
   return Object.entries(views).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+}
+
+// ── Intent Scoring ────────────────────────────────────────────────────────
+export function calculateIntentScore(visitor: VisitorData): IntentScore {
+  let score = 0;
+  const signals: string[] = [];
+
+  // Page depth signals
+  if (visitor.lastPage.includes("/products/")) {
+    score += 15;
+    signals.push("product_page_view");
+  }
+  if (visitor.lastPage.includes("/solutions/")) {
+    score += 10;
+    signals.push("solutions_page_view");
+  }
+  if (visitor.lastPage.includes("/pricing") || visitor.lastPage.includes("/quote")) {
+    score += 25;
+    signals.push("pricing_page_view");
+  }
+  if (visitor.lastPage.includes("/technology/")) {
+    score += 10;
+    signals.push("technology_page_view");
+  }
+
+  // Visit frequency
+  if (visitor.visitCount >= 3) {
+    score += 20;
+    signals.push("repeat_visitor");
+  }
+  if (visitor.visitCount >= 5) {
+    score += 15;
+    signals.push("high_engagement");
+  }
+
+  // Section engagement
+  const sectionViews = (visitor.preferences.sectionViews as Record<string, number>) || {};
+  const totalSectionViews = Object.values(sectionViews).reduce((a, b) => a + b, 0);
+  if (totalSectionViews >= 5) {
+    score += 10;
+    signals.push("deep_section_engagement");
+  }
+
+  // Document downloads
+  if (visitor.documentContext.lastDownloaded) {
+    score += 15;
+    signals.push("document_download");
+  }
+
+  // Time on page (if available)
+  if (visitor.readingBehavior.timeOnPage > 120000) { // 2 minutes
+    score += 10;
+    signals.push("extended_dwell_time");
+  }
+
+  // Collaborative signals
+  if (visitor.collaborative?.companyVisitorCount && visitor.collaborative.companyVisitorCount >= 3) {
+    score += 20;
+    signals.push("multi_stakeholder_engagement");
+  }
+
+  // Firmographic signals
+  if (visitor.firmographic?.isTargetAccount) {
+    score += 15;
+    signals.push("target_account");
+  }
+  if (visitor.firmographic?.accountTier === "strategic") {
+    score += 10;
+    signals.push("strategic_account");
+  }
+
+  // Purchase history
+  if (visitor.purchaseHistory && visitor.purchaseHistory.totalOrders > 0) {
+    score += 20;
+    signals.push("existing_customer");
+  }
+
+  // Determine stage
+  let stage: IntentScore["stage"] = "researching";
+  if (score >= 90) stage = "buying";
+  else if (score >= 50) stage = "evaluating";
+
+  return {
+    score: Math.min(score, 100),
+    stage,
+    signals,
+    lastUpdated: new Date().toISOString(),
+    triggeredAlerts: [],
+  };
+}
+
+// ── Electrical Standards by Region ────────────────────────────────────────
+export function getElectricalStandard(country: string): VisitorGeo["electricalStandard"] {
+  const euCountries = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"];
+  const usCountries = ["US", "CA", "MX"];
+  const jpCountries = ["JP"];
+
+  const code = country.toUpperCase().slice(0, 2);
+
+  if (euCountries.includes(code)) return "230V_50Hz";
+  if (usCountries.includes(code)) return "120V_60Hz";
+  if (jpCountries.includes(code)) return "100V_50Hz"; // Japan has both 50/60Hz
+  return "unknown";
+}
+
+export function getComplianceStandards(country: string): string[] {
+  const code = country.toUpperCase().slice(0, 2);
+  const standards: string[] = [];
+
+  const euCountries = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB", "CH", "NO"];
+  const usCountries = ["US", "CA"];
+  const cnCountries = ["CN"];
+
+  if (euCountries.includes(code)) {
+    standards.push("CE", "RoHS", "REACH", "WEEE");
+  }
+  if (usCountries.includes(code)) {
+    standards.push("UL", "CSA", "FCC", "NEC");
+  }
+  if (cnCountries.includes(code)) {
+    standards.push("CCC", "RoHS China");
+  }
+  if (code === "IN") {
+    standards.push("BIS", "CE", "RoHS");
+  }
+
+  return standards;
 }
 
 // ── Theme ─────────────────────────────────────────────────────────────────

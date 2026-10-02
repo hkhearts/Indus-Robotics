@@ -19,6 +19,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { categories, faqs, productFamilies, products, type Product } from "@/data/robotics";
 import { companyConfig } from "@/data/config";
+import { AdaptiveHero } from "@/components/intelligence/AdaptiveHero";
+import { IntentCTA } from "@/components/intelligence/IntentCTA";
 import { useModals } from "@/components/modals/ModalContext";
 import heroImage from "@/assets/robotics-hero-new.png";
 import componentsImage from "@/assets/robotic-components-new.png";
@@ -325,67 +327,12 @@ function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* 1. HERO SECTION */}
-      <section className="relative flex min-h-[760px] items-end overflow-hidden bg-black pt-20 text-white lg:min-h-[860px]">
-        <img
-          src={heroImage}
-          alt="Industrial robotic arm operating in a precision manufacturing cell"
-          width={1600}
-          height={1008}
-          fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[68%_center]"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.06_0.006_240)_0%,color-mix(in_oklab,oklch(0.06_0.006_240)_90%,transparent)_40%,color-mix(in_oklab,oklch(0.06_0.006_240)_30%,transparent)_75%,color-mix(in_oklab,oklch(0.06_0.006_240)_55%,transparent)_100%)]" />
-        <div className="technical-grid absolute inset-0 opacity-20" />
-        {/* Blue bottom gradient edge */}
-        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[oklch(0.08_0.005_240)] to-transparent" />
-
-        <div className="relative mx-auto w-full max-w-[1440px] px-5 pb-16 lg:px-10 lg:pb-24">
-          <div className="max-w-3xl">
-            <p className="animate-rise text-xs font-bold uppercase tracking-[.24em] text-signal">
-              Industrial Robotics · Precision Motion · Automation
-            </p>
-            <h1 className="animate-rise-delay mt-6 font-display text-6xl font-bold uppercase leading-[.85] sm:text-7xl lg:text-[104px] text-white">
-              Powering the future of industrial robotics
-            </h1>
-            <p className="mt-7 max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
-              Advanced robotic components, precision reducers, and multi-axis control systems
-              engineered for repeatable, high-reliability industrial automation.
-            </p>
-
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button
-                asChild
-                className="h-12 rounded-none bg-signal px-7 text-xs font-bold uppercase text-signal-foreground hover:bg-signal/90 pulse-blue"
-              >
-                <Link to="/products">
-                  Explore Products <ArrowRight size={14} className="ml-1" />
-                </Link>
-              </Button>
-
-              <Button
-                variant="outline"
-                className="h-12 rounded-none border-signal/40 bg-transparent px-7 text-xs font-bold uppercase text-white hover:bg-signal/10 hover:border-signal hover:text-signal"
-                onClick={() => openModal("engineer")}
-              >
-                Talk to an Engineer
-              </Button>
-            </div>
-
-            <button
-              onClick={handleWhatsApp}
-              className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-white/50 transition-colors hover:text-signal"
-            >
-              <MessageSquare size={13} className="text-signal" />
-              Chat on WhatsApp — +91 93612 49474
-            </button>
-
-            <p className="mt-8 text-[10px] font-bold uppercase tracking-[.2em] text-white/40">
-              {companyConfig.tagline}
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* 1. HERO SECTION — #1 Reverse-IP Firmographic Intelligence */}
+      <AdaptiveHero
+        defaultTitle="Powering the future of industrial robotics"
+        defaultSub="Advanced robotic components, precision reducers, and multi-axis control systems engineered for repeatable, high-reliability industrial automation."
+        heroImage={heroImage}
+      />
 
       {/* STATS STRIP — no empty space */}
       <section className="border-b border-border bg-card">
@@ -922,6 +869,9 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* #8 Buying-Journey Intent Scoring — dynamic CTA */}
+      <IntentCTA />
 
       {/* 12. FINAL CALL TO ACTION (Section 37) */}
       <section

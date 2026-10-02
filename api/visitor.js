@@ -30,6 +30,20 @@ export default async function handler(req, res) {
         // silently fail geo lookup
       }
 
+      // ── Enrichment: electrical + compliance + firmographic (lightweight) ──
+      const EU = ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"];
+      const cc = String(geo.country_code || geo.country || "").toUpperCase().slice(0, 2);
+      const electricalStandard = EU.includes(cc) || cc === "IN" ? "230V_50Hz" : ["US","CA","MX"].includes(cc) ? "120V_60Hz" : cc === "JP" ? "100V_50Hz" : "unknown";
+      const complianceStandards = EU.includes(cc) || ["GB","CH","NO"].includes(cc) ? ["CE","RoHS","REACH","WEEE"] : ["US","CA"].includes(cc) ? ["UL","CSA","FCC","NEC"] : cc === "CN" ? ["CCC","RoHS China"] : cc === "IN" ? ["BIS","CE","RoHS"] : ["CE","RoHS"];
+      const org = String(geo.org || geo.asn || "").replace(/inc\.?|llc|ltd\.?|corp\.?|gmbh|ag|sa|plc|co\.?/gi, "").trim();
+      const IND_KEYWORDS = { automotive: ["ford","toyota","bmw","tesla","automotive","auto "], electronics: ["intel","semiconductor","electronics","chip"], manufacturing: ["siemens","fanuc","yaskawa","manufacturing","industrial"], logistics: ["fedex","dhl","logistics","warehouse"], food: ["nestle","pepsi","food","packaging"], aerospace: ["boeing","airbus","aerospace"], medical: ["medtronic","medical","pharma"], energy: ["shell","energy","power"] };
+      let industry = "general";
+      const orgLower = org.toLowerCase();
+      for (const [k, words] of Object.entries(IND_KEYWORDS)) { if (words.some((w) => orgLower.includes(w))) { industry = k; break; } }
+      const TARGETS = ["ford motor","general motors","toyota","siemens","fanuc","yaskawa","boeing","tesla"];
+      const isTarget = TARGETS.some((t) => orgLower.includes(t));
+      const firmographic = org && org.toLowerCase() !== "unknown" ? { companyName: org || "Unknown Visitor", industry, employeeCount: "Unknown", revenueRange: "Unknown", technologyStack: [], domain: "", isTargetAccount: isTarget, accountTier: isTarget ? "strategic" : "unknown" } : null;
+
       // Look up in Airtable Visitors table
       const filterFormula = encodeURIComponent(`{IP Address} = "${ip}"`);
       const atRes = await fetch(
@@ -80,9 +94,20 @@ export default async function handler(req, res) {
             currency: geo.currency || "",
             latitude: geo.latitude || 0,
             longitude: geo.longitude || 0,
+            region: geo.region || "",
+            electricalStandard,
+            complianceStandards,
           },
           recordId: existing.id,
           name: existing.fields["Name"] || "",
+          firmographic,
+          collaborative: null,
+          intent: { score: Math.min(10 + visitCount * 8, 95), stage: visitCount >= 5 ? "buying" : visitCount >= 3 ? "evaluating" : "researching", signals: visitCount >= 3 ? ["repeat_visitor"] : [], lastUpdated: new Date().toISOString(), triggeredAlerts: [] },
+          purchaseHistory: null,
+          supplyChain: [],
+          readingBehavior: { scrollVelocity: "normal", hoverDepth: 0, timeOnPage: 0, sectionsRead: [] },
+          documentContext: { lastDownloaded: existing.fields["Last Download"] || null, lastDownloadedCategory: null, interestedTopics: [] },
+          escalation: { needsHumanReview: false, complexityScore: 0 },
         });
       } else {
         // New visitor — create record
@@ -127,9 +152,20 @@ export default async function handler(req, res) {
             currency: geo.currency || "",
             latitude: geo.latitude || 0,
             longitude: geo.longitude || 0,
+            region: geo.region || "",
+            electricalStandard,
+            complianceStandards,
           },
           recordId: createData.id || "",
           name: "",
+          firmographic,
+          collaborative: null,
+          intent: { score: 10, stage: "researching", signals: [], lastUpdated: new Date().toISOString(), triggeredAlerts: [] },
+          purchaseHistory: null,
+          supplyChain: [],
+          readingBehavior: { scrollVelocity: "normal", hoverDepth: 0, timeOnPage: 0, sectionsRead: [] },
+          documentContext: { lastDownloaded: null, lastDownloadedCategory: null, interestedTopics: [] },
+          escalation: { needsHumanReview: false, complexityScore: 0 },
         });
       }
     } catch (err) {
@@ -141,7 +177,7 @@ export default async function handler(req, res) {
   // ── POST: update visitor state (last page, section, preferences) ────────
   if (req.method === "POST") {
     try {
-      const { recordId, lastPage, lastSection, preferences, name, sessionData } = req.body || {};
+      const { recordId, lastPage, lastSection, preferences, name, sessionData, lastDownload, lastDownloadCategory, intentScore, intentStage } = req.body || {};
       if (!recordId) return res.status(400).json({ error: "recordId required" });
 
       const fields = {};
@@ -150,6 +186,9 @@ export default async function handler(req, res) {
       if (preferences !== undefined) fields["Preferences"] = JSON.stringify(preferences);
       if (name) fields["Name"] = name;
       if (sessionData) fields["Session Data"] = JSON.stringify(sessionData);
+      if (lastDownload !== undefined) fields["Last Download"] = lastDownload;
+      if (intentScore !== undefined) fields["Intent Score"] = intentScore;
+      if (intentStage !== undefined) fields["Intent Stage"] = intentStage;
 
       await fetch(
         `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Visitors/${recordId}`,

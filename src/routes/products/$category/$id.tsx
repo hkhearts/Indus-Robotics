@@ -18,6 +18,10 @@ import { getProduct, getCategory, products, type Product } from "@/data/robotics
 import { companyConfig } from "@/data/config";
 import { useModals } from "@/components/modals/ModalContext";
 import { RelatedContent } from "@/components/common/RelatedContent";
+import { ComplianceBar } from "@/components/intelligence/ComplianceBar";
+import { SmartBOMPanel } from "@/components/intelligence/SmartBOMPanel";
+import { SupplyChainNote } from "@/components/intelligence/SupplyChainNote";
+import { ReadingAdapt } from "@/components/intelligence/ReadingAdapt";
 import componentsImage from "@/assets/robotic-components.jpg";
 import armImage from "@/assets/robotic-arm-cell.jpg";
 import mobileImage from "@/assets/mobile-robotics.jpg";
@@ -118,6 +122,15 @@ export function ProductDetailPage() {
               <p className="mt-6 text-base leading-8 text-surface-foreground/75 sm:text-lg">
                 {product.overview}
               </p>
+
+              {/* #3 Geo-Compliance Intelligence */}
+              <div className="mt-4"><ComplianceBar /></div>
+              {/* #11 Reading-Velocity: skim bullets */}
+              <ReadingAdapt bullets={product.features} />
+              {/* #4 Smart BOM */}
+              <SmartBOMPanel productId={product.id} categorySlug={category.slug} />
+              {/* #13 Supply-chain routing */}
+              <SupplyChainNote productId={product.id} categorySlug={category.slug} />
 
               {/* Header CTAs */}
               <div className="mt-8 flex flex-wrap items-center gap-3">

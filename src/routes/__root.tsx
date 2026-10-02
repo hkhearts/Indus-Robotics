@@ -41,6 +41,8 @@ import { RoboticsAssistant } from "@/components/chatbot/RoboticsAssistant";
 import { companyConfig } from "@/data/config";
 
 import { IntelligenceProvider, useIntelligence } from "@/components/intelligence/IntelligenceProvider";
+import { MaintenanceBanner } from "@/components/intelligence/MaintenanceBanner";
+import { SharedWorkspacePrompt } from "@/components/intelligence/SharedWorkspacePrompt";
 import { GeoGreetingBar } from "@/components/intelligence/GeoGreetingBar";
 import { WelcomeBanner } from "@/components/intelligence/WelcomeBanner";
 import { ChatBot } from "@/components/intelligence/ChatBot";
@@ -524,6 +526,8 @@ function RootComponent() {
         <IntelligenceProvider>
           <IntelligenceLayout>
             <div className="flex min-h-screen flex-col">
+              <MaintenanceBanner />
+              <SharedWorkspacePrompt />
               <GeoGreetingBar visitorData={null} />
               <Header />
 

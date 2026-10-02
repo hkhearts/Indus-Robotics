@@ -1,16 +1,28 @@
-import React, { useState, type FormEvent } from "react";
+import React, { useEffect, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, Upload, ArrowRight, Info, Loader2 } from "lucide-react";
+import { Check, Upload, ArrowRight, Info, Loader2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createJiraTask } from "@/lib/jira";
+import { useIntelligence } from "@/components/intelligence/IntelligenceProvider";
+import { shouldMinimizeForm } from "@/lib/intelligence";
 
 export function EngineeringEnquiryForm() {
+  const { visitor } = useIntelligence();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [unknownSpecs, setUnknownSpecs] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  // #9 Dynamic Friction Intelligence: returning visitors get 1-field fast-track
+  const minimized = shouldMinimizeForm(visitor);
+  const [quickQty, setQuickQty] = useState("");
+
+  useEffect(() => {
+    if (visitor?.name) setFormData((f) => ({ ...f, fullName: f.fullName || visitor.name }));
+    if (visitor?.firmographic?.companyName) setFormData((f) => ({ ...f, company: f.company || visitor.firmographic!.companyName }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visitor?.recordId]);
 
   const [formData, setFormData] = useState({
     // Section 1: Contact Details
@@ -135,8 +147,25 @@ ${formData.notes}
     );
   }
 
+  if (minimized && !success) {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-6 border border-signal/30 bg-signal/5 p-6 sm:p-8">
+        <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.2em] text-signal"><Zap size={14} /> Welcome back — fast-track (details pre-filled)</p>
+        <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Quantity needed *
+          <Input required value={quickQty} onChange={(e) => { setQuickQty(e.target.value); setFormData({ ...formData, quantity: e.target.value }); }} placeholder="e.g. 25 units" className="mt-2 h-12 rounded-none border-input bg-background text-sm" />
+        </label>
+        <Button type="submit" disabled={loading} className="h-12 rounded-none bg-signal px-8 font-bold uppercase text-signal-foreground">
+          {loading ? <Loader2 size={15} className="animate-spin" /> : <>Fast-Track Quote <ArrowRight size={14} className="ml-1" /></>}
+        </Button>
+        <p className="text-[11px] text-muted-foreground">We pre-filled your contact + company from visit #{visitor?.visitCount}. Need to change details? <button type="button" className="font-bold text-signal" onClick={() => visitor && (window.location.hash = "#full-form")}>Use full form</button></p>
+      </form>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-12">
+    <form onSubmit={handleSubmit} className="space-y-12" id="full-form">
+      {minimized && <p className="border border-signal/30 bg-signal/5 p-3 text-[11px] text-signal">Returning visitor — most fields pre-filled from your Airtable record.</p>}
       {/* SECTION 1: CONTACT DETAILS */}
       <fieldset className="border border-border bg-card p-6 sm:p-8">
         <legend className="px-3 font-display text-lg uppercase tracking-wider text-signal">

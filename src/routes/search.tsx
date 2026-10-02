@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Search as SearchIcon,
   ArrowRight,
@@ -22,6 +22,8 @@ import { resourcesData } from "@/data/resources";
 import { extendedFaqs } from "@/data/faqs";
 import { useModals } from "@/components/modals/ModalContext";
 import { companyConfig } from "@/data/config";
+import { semanticRoute, lookupCompetitor } from "@/lib/intelligence";
+import { VisionPartFinder } from "@/components/intelligence/VisionPartFinder";
 
 interface SearchParams {
   q?: string;
@@ -73,6 +75,16 @@ export function SearchPage() {
       }),
     });
   };
+
+  // #7 Semantic engineering search: physics intent → routed categories
+  const semantic = useMemo(() => (query ? semanticRoute(query) : null), [query]);
+  // #5 Competitor cross-reference state
+  const [crossRef, setCrossRef] = useState<null | { found: boolean; indusName?: string; indusId?: string; note?: string; matchType?: string; competitorPart?: string }>(null);
+  useEffect(() => {
+    if (query && /[a-z]{2,}[-\s]*\d/i.test(query)) {
+      lookupCompetitor(query).then((r) => setCrossRef(r as typeof crossRef)).catch(() => setCrossRef(null));
+    } else setCrossRef(null);
+  }, [query]);
 
   // Perform search across all domains
   const results = useMemo(() => {
@@ -264,6 +276,21 @@ export function SearchPage() {
       {/* Results Content Area */}
       <section className="px-5 py-10 lg:px-10 lg:py-14">
         <div className="mx-auto max-w-[1200px]">
+          {/* #5 Competitor cross-ref banner + #7 semantic nudge + #6 vision */}
+          {query && crossRef?.found && (
+            <div className="mb-4 border border-signal/40 bg-signal/5 p-4 text-sm">
+              Looking for an alternative to <strong>{crossRef.competitorPart || query}</strong>? Here is our drop-in replacement:{" "}
+              <strong className="text-signal">{crossRef.indusName}</strong> — {crossRef.note} ({crossRef.matchType} match).{" "}
+              <Link to="/products/$category/$id" params={{ category: "precision-reducers", id: String(crossRef.indusId) }} className="font-bold text-signal hover:underline">View replacement →</Link>
+            </div>
+          )}
+          {query && semantic && (
+            <div className="mb-4 border border-border bg-card p-4 text-sm text-muted-foreground">
+              <span className="font-bold uppercase tracking-wider text-signal">Engineering intent understood:</span> routing “{query}” → {semantic.label}. Compare {semantic.routeTo.join(" · ")} below or via Product Finder.
+            </div>
+          )}
+          {query && <div className="mb-6 max-w-xl"><VisionPartFinder compact /></div>}
+
           {/* Query Summary & Tab Filter Bar */}
           {query && (
             <div className="mb-8 border-b border-border pb-4">

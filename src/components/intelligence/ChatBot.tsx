@@ -2,8 +2,10 @@
  * ChatBot.tsx — Real NLP-style chatbot with visitor intelligence
  */
 import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, Bot, Loader2, ChevronDown } from "lucide-react";
+import { X, Send, Bot, Loader2, ChevronDown } from "lucide-react";
 import { getGeoGreeting, type VisitorData } from "@/lib/visitor";
+import { getDocumentNudge } from "@/lib/intelligence";
+import { VisionPartFinder } from "./VisionPartFinder";
 
 interface Message {
   role: "user" | "bot";
@@ -32,14 +34,15 @@ export function ChatBot({ visitorData }: ChatBotProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Initial bot greeting
+  // Initial bot greeting (+ #10 Document Contextual Intelligence nudge)
   useEffect(() => {
     if (messages.length === 0) {
       const timeGreeting = getGeoGreeting();
-      const greeting = visitorData?.isReturning
+      const nudge = visitorData ? getDocumentNudge(visitorData.documentContext) : null;
+      const base = visitorData?.isReturning
         ? `${timeGreeting}! Welcome back for visit #${visitorData.visitCount}. How can I help you today?`
-        : `${timeGreeting}! I'm your Indus Robotics assistant. Ask me about our products, pricing, or technical specs!`;
-      setMessages([{ role: "bot", text: greeting, timestamp: new Date() }]);
+        : `${timeGreeting}! I'm your Indus Robotics assistant. Ask me about our products, pricing, or technical specs! Try a competitor part no. (SGM7S-04) or "high torque small space".`;
+      setMessages([{ role: "bot", text: nudge ? `${base}\n\n${nudge}` : base, timestamp: new Date() }]);
     }
   }, [visitorData, messages.length]);
 
@@ -185,6 +188,9 @@ export function ChatBot({ visitorData }: ChatBotProps) {
                     {q}
                   </button>
                 ))}
+              </div>
+              <div className="mt-2">
+                <VisionPartFinder compact />
               </div>
             </div>
           )}

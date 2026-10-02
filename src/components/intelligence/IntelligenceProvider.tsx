@@ -12,6 +12,7 @@ import { useRouterState } from "@tanstack/react-router";
 import {
   fetchVisitorData,
   updateVisitorPage,
+  calculateIntentScore,
   getSessionId,
   initTheme,
   trackSectionView,
@@ -22,12 +23,14 @@ interface IntelligenceCtx {
   visitor: VisitorData | null;
   sessionId: string;
   trackSection: (section: string) => void;
+  trackDownload: (title: string, category?: string) => void;
 }
 
 const Ctx = createContext<IntelligenceCtx>({
   visitor: null,
   sessionId: "",
   trackSection: () => {},
+  trackDownload: () => {},
 });
 
 export const useIntelligence = () => useContext(Ctx);
@@ -68,11 +71,62 @@ export function IntelligenceProvider({ children }: { children: React.ReactNode }
     initTheme();
   }, []);
 
-  // Fetch visitor data once
+  // Fetch visitor data once + enrich with collaborative/maintenance
   useEffect(() => {
-    fetchVisitorData().then((data) => {
-      if (data) setVisitor(data);
-    });
+    let cancelled = false;
+    (async () => {
+      const data = await fetchVisitorData();
+      if (!data || cancelled) return;
+      let enriched: VisitorData = { ...data, intent: calculateIntentScore(data) };
+
+      // Account Collaborative Intelligence (#2): fetch company co-visitors
+      try {
+        const r = await fetch("/api/collaborative");
+        if (r.ok) {
+          const c = await r.json();
+          enriched = { ...enriched, collaborative: { companyVisitorCount: c.companyVisitorCount ?? 1, stakeholders: c.stakeholders ?? [], hasWorkspace: !!c.hasWorkspace, workspaceId: c.workspaceId } };
+        }
+      } catch { /* offline-safe */ }
+
+      // Predictive Maintenance (#12): fetch alerts for returning customers
+      try {
+        if (enriched.recordId) {
+          const r = await fetch(`/api/predictive-maintenance?recordId=${encodeURIComponent(enriched.recordId)}`);
+          if (r.ok) {
+            const pm = await r.json();
+            if (pm?.alerts?.length) {
+              enriched = {
+                ...enriched,
+                purchaseHistory: {
+                  products: pm.alerts.map((a: Record<string, unknown>) => ({ productId: "", productName: String(a["productName"]), category: String(a["productCategory"]), purchaseDate: String(a["purchaseDate"]), quantity: 1, maintenanceIntervalHours: 10000, hoursSincePurchase: 0, nextMaintenanceDue: "" })),
+                  totalOrders: pm.totalProducts ?? pm.alerts.length,
+                  lastOrderDate: "",
+                },
+              };
+            }
+          }
+        }
+      } catch { /* offline-safe */ }
+
+      enriched = { ...enriched, intent: calculateIntentScore(enriched) };
+      if (!cancelled) setVisitor(enriched);
+
+      // Buying Journey Intent Scoring (#8): persist + Jira alert at 90
+      try {
+        if (enriched.recordId && enriched.intent.score >= 50) {
+          fetch("/api/visitor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recordId: enriched.recordId, intentScore: enriched.intent.score, intentStage: enriched.intent.stage }) }).catch(() => {});
+        }
+        if (enriched.intent.score >= 90 && enriched.recordId) {
+          const key = `ir_jira_alert_${enriched.recordId}`;
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, "1");
+            fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ event: "intent_buying", page: window.location.pathname, details: `Intent ${enriched.intent.score} — fast-track`, session: sessionId }) }).catch(() => {});
+          }
+        }
+      } catch { /* noop */ }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Track page views on route change
@@ -139,10 +193,20 @@ export function IntelligenceProvider({ children }: { children: React.ReactNode }
         body: JSON.stringify({ recordId: visitor.recordId, lastSection: section }),
       }).catch(() => {});
     }
+    setVisitor((v) => (v ? { ...v, lastSection: section, readingBehavior: { ...v.readingBehavior, sectionsRead: [...v.readingBehavior.sectionsRead, section] } } : v));
+  };
+
+  // Document Contextual Intelligence (#10): remember downloads for chatbot nudge
+  const trackDownload = (title: string, category?: string) => {
+    setVisitor((v) => (v ? { ...v, documentContext: { lastDownloaded: title, lastDownloadedCategory: category ?? null, interestedTopics: [...v.documentContext.interestedTopics, title] }, intent: calculateIntentScore({ ...v, documentContext: { lastDownloaded: title, lastDownloadedCategory: category ?? null, interestedTopics: [] } }) } : v));
+    if (visitor?.recordId) {
+      fetch("/api/visitor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recordId: visitor.recordId, lastDownload: title }) }).catch(() => {});
+    }
+    sendTrackEvent("download", currentPath, title);
   };
 
   return (
-    <Ctx.Provider value={{ visitor, sessionId, trackSection }}>
+    <Ctx.Provider value={{ visitor, sessionId, trackSection, trackDownload }}>
       {children}
     </Ctx.Provider>
   );
