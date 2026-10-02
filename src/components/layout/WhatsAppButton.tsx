@@ -26,14 +26,16 @@ export function WhatsAppButton() {
       }
     }
 
-    const url = companyConfig.getWhatsAppUrl({ type, name });
+    const url = companyConfig.getWhatsAppUrl(
+      name ? { type, name } : { type }
+    );
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
     <button
       onClick={handleClick}
-      aria-label="Chat on WhatsApp with an INDUS engineer"
+      aria-label="Chat on WhatsApp with Indus Robotics"
       className="fixed bottom-20 left-4 z-40 flex h-11 items-center gap-2 border border-signal/40 bg-surface-dark/95 px-3.5 text-xs font-bold uppercase tracking-wider text-surface-foreground shadow-2xl backdrop-blur-md transition-all hover:scale-105 hover:border-signal hover:text-signal md:bottom-6 md:left-6"
     >
       <span className="relative flex size-2.5">
@@ -41,7 +43,7 @@ export function WhatsAppButton() {
         <span className="relative inline-flex size-2.5 rounded-full bg-signal" />
       </span>
       <MessageSquare size={16} className="text-signal" />
-      <span className="hidden sm:inline">Chat on WhatsApp</span>
+      <span className="hidden sm:inline">WhatsApp · +91 93612 49474</span>
       <span className="sm:hidden">WhatsApp</span>
     </button>
   );

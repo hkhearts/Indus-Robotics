@@ -20,6 +20,7 @@ import { companyConfig } from "@/data/config";
 import { useModals } from "@/components/modals/ModalContext";
 import { MobileNav } from "./MobileNav";
 import { trackDigitalPresence } from "@/trackDigitalPresence";
+import { ThemeToggle } from "@/components/intelligence/ThemeToggle";
 
 export function Header() {
   const [openMega, setOpenMega] = useState<string | null>(null);
@@ -74,18 +75,15 @@ export function Header() {
         <Link
           to="/"
           className="flex items-center gap-3 transition-opacity hover:opacity-90"
-          aria-label="INDUS Robotics Home"
+          aria-label="Indus Robotics Home"
         >
-          <span className="grid size-9 place-items-center border border-signal bg-signal/10 text-signal shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+          <span className="grid size-9 place-items-center border border-signal bg-signal/10 text-signal shadow-[0_0_15px_oklch(0.65_0.22_250_/_0.3)]">
             <Move3d size={20} />
           </span>
           <span>
             <b className="block font-display text-xl leading-none tracking-wider text-surface-foreground">
-              {companyConfig.brandName}
+              Indus Robotics
             </b>
-            <span className="text-[9px] font-bold uppercase tracking-[.24em] text-muted-foreground">
-              Industrial Robotics
-            </span>
           </span>
         </Link>
 
@@ -225,6 +223,9 @@ export function Header() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle compact />
+
           {/* Quick Search Trigger */}
           <Button
             variant="ghost"

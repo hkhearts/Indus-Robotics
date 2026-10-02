@@ -20,23 +20,23 @@ import { Button } from "@/components/ui/button";
 import { categories, faqs, productFamilies, products, type Product } from "@/data/robotics";
 import { companyConfig } from "@/data/config";
 import { useModals } from "@/components/modals/ModalContext";
-import heroImage from "@/assets/robotics-hero.jpg";
-import componentsImage from "@/assets/robotic-components.jpg";
+import heroImage from "@/assets/robotics-hero-new.png";
+import componentsImage from "@/assets/robotic-components-new.png";
 import armImage from "@/assets/robotic-arm-cell.jpg";
-import mobileImage from "@/assets/mobile-robotics.jpg";
+import mobileImage from "@/assets/mobile-robotics-new.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "INDUS Industrial Robotics — Precision Motion & Automation Technology" },
+      { title: "Indus Robotics — Precision Motion & Automation Technology" },
       {
         name: "description",
         content:
-          "Discover robotic components, precision reducers, actuators, motion control, and connected industrial automation technology engineered for manufacturing performance.",
+          "Indus Robotics delivers robotic components, precision reducers, actuators, motion control, and connected industrial automation technology engineered for manufacturing performance.",
       },
       {
         property: "og:title",
-        content: "INDUS Industrial Robotics — Precision Motion & Automation Technology",
+        content: "Indus Robotics — Precision Motion & Automation Technology",
       },
       {
         property: "og:description",
@@ -62,7 +62,7 @@ const applicationCards = [
   {
     title: "Electronics",
     desc: "Micro-placement, cleanroom handling, PCB testing, and micro-dispensing.",
-    img: armImage,
+    img: componentsImage,
     slug: "electronics",
   },
   {
@@ -335,8 +335,10 @@ function HomePage() {
           fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-[68%_center]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--color-surface-dark)_0%,color-mix(in_oklab,var(--color-surface-dark)_92%,transparent)_38%,color-mix(in_oklab,var(--color-surface-dark)_25%,transparent)_72%,color-mix(in_oklab,var(--color-surface-dark)_60%,transparent)_100%)]" />
-        <div className="technical-grid absolute inset-0 opacity-30" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.06_0.006_240)_0%,color-mix(in_oklab,oklch(0.06_0.006_240)_90%,transparent)_40%,color-mix(in_oklab,oklch(0.06_0.006_240)_30%,transparent)_75%,color-mix(in_oklab,oklch(0.06_0.006_240)_55%,transparent)_100%)]" />
+        <div className="technical-grid absolute inset-0 opacity-20" />
+        {/* Blue bottom gradient edge */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[oklch(0.08_0.005_240)] to-transparent" />
 
         <div className="relative mx-auto w-full max-w-[1440px] px-5 pb-16 lg:px-10 lg:pb-24">
           <div className="max-w-3xl">
@@ -354,7 +356,7 @@ function HomePage() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button
                 asChild
-                className="h-12 rounded-none bg-signal px-7 text-xs font-bold uppercase text-signal-foreground hover:bg-signal/90"
+                className="h-12 rounded-none bg-signal px-7 text-xs font-bold uppercase text-signal-foreground hover:bg-signal/90 pulse-blue"
               >
                 <Link to="/products">
                   Explore Products <ArrowRight size={14} className="ml-1" />
@@ -363,7 +365,7 @@ function HomePage() {
 
               <Button
                 variant="outline"
-                className="h-12 rounded-none border-surface-foreground/35 bg-transparent px-7 text-xs font-bold uppercase text-surface-foreground hover:bg-surface-foreground hover:text-surface-dark"
+                className="h-12 rounded-none border-signal/40 bg-transparent px-7 text-xs font-bold uppercase text-surface-foreground hover:bg-signal/10 hover:border-signal hover:text-signal"
                 onClick={() => openModal("engineer")}
               >
                 Talk to an Engineer
@@ -375,13 +377,40 @@ function HomePage() {
               className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-surface-foreground/50 transition-colors hover:text-signal"
             >
               <MessageSquare size={13} className="text-signal" />
-              Chat on WhatsApp
+              Chat on WhatsApp — +91 93612 49474
             </button>
 
             <p className="mt-8 text-[10px] font-bold uppercase tracking-[.2em] text-surface-foreground/40">
               {companyConfig.tagline}
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* STATS STRIP — no empty space */}
+      <section className="border-b border-border bg-card">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-2 sm:grid-cols-4">
+          {[
+            { value: "500+", label: "Components Deployed", icon: Box },
+            { value: "99.8%", label: "Uptime Reliability", icon: ShieldCheck },
+            { value: "6-Axis", label: "Robot Architecture", icon: Move3d },
+            { value: "24/7", label: "Engineering Support", icon: Gauge },
+          ].map(({ value, label, icon: Icon }, i) => (
+            <div
+              key={label}
+              className={`flex items-center gap-4 px-6 py-5 ${
+                i < 3 ? "border-b sm:border-b-0 sm:border-r border-border" : ""
+              }`}
+            >
+              <span className="flex size-10 items-center justify-center border border-signal/30 bg-signal/5 text-signal">
+                <Icon size={18} />
+              </span>
+              <div>
+                <p className="font-display text-2xl font-bold text-signal">{value}</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -478,7 +507,7 @@ function HomePage() {
           <div className="grid border-l border-t border-border md:grid-cols-2 lg:grid-cols-3">
             {categories.map((category, i) => {
               const icons = [Zap, Settings2, Move3d, Bot, Box, Cpu];
-              const Icon = icons[i % icons.length];
+              const Icon = icons[i % icons.length] as React.ElementType;
 
               return (
                 <article

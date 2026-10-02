@@ -244,11 +244,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── Response ──────────────────────────────────────────────────────────
+  // ── Response — no issue URL exposed to frontend ─────────────────────
   return res.status(200).json({
     success: true,
     issueKey: mainIssueKey,
-    issueUrl: `https://${domain}/browse/${mainIssueKey}`,
-    subtasks: subtaskResults,
+    subtasks: subtaskResults.length,
   });
 }

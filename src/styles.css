@@ -4,8 +4,67 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ── LIGHT THEME (when .light-theme is on <html>) ─────────────────── */
+html.light-theme {
+  --background: oklch(0.97 0.003 240);
+  --foreground: oklch(0.12 0.015 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0.015 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0.015 240);
+  --primary: oklch(0.52 0.22 250);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.93 0.005 240);
+  --secondary-foreground: oklch(0.25 0.01 240);
+  --muted: oklch(0.93 0.005 240);
+  --muted-foreground: oklch(0.48 0.02 240);
+  --accent: oklch(0.52 0.22 250);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.58 0.23 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.88 0.01 240);
+  --input: oklch(0.88 0.01 240);
+  --ring: oklch(0.52 0.22 250);
+  --surface-dark: oklch(0.95 0.004 240);
+  --surface-foreground: oklch(0.12 0.015 240);
+  --surface-elevated: oklch(0.99 0.002 240);
+  --signal: oklch(0.52 0.22 250);
+  --signal-foreground: oklch(0.98 0 0);
+  --steel: oklch(0.6 0.04 240);
+}
+
+/* ── DARK THEME class (explicit, same as :root defaults) ─────────── */
+html.dark-theme {
+  --background: oklch(0.08 0.005 240);
+  --foreground: oklch(0.93 0.01 220);
+  --card: oklch(0.11 0.008 240);
+  --card-foreground: oklch(0.93 0.01 220);
+  --popover: oklch(0.11 0.008 240);
+  --popover-foreground: oklch(0.93 0.01 220);
+  --primary: oklch(0.65 0.22 250);
+  --primary-foreground: oklch(0.04 0.005 240);
+  --secondary: oklch(0.14 0.01 240);
+  --secondary-foreground: oklch(0.85 0.01 220);
+  --muted: oklch(0.14 0.008 240);
+  --muted-foreground: oklch(0.52 0.02 230);
+  --accent: oklch(0.65 0.22 250);
+  --accent-foreground: oklch(0.04 0.005 240);
+  --destructive: oklch(0.58 0.23 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.22 0.015 240);
+  --input: oklch(0.22 0.015 240);
+  --ring: oklch(0.65 0.22 250);
+  --surface-dark: oklch(0.06 0.006 240);
+  --surface-foreground: oklch(0.93 0.01 220);
+  --surface-elevated: oklch(0.13 0.01 240);
+  --signal: oklch(0.65 0.22 250);
+  --signal-foreground: oklch(0.04 0.005 240);
+  --steel: oklch(0.38 0.04 240);
+}
+
+
 @theme inline {
-  --font-sans: "Manrope", sans-serif;
+  --font-sans: "Inter", "Manrope", sans-serif;
   --font-display: "Barlow Condensed", sans-serif;
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
@@ -37,33 +96,53 @@
   --color-steel: var(--steel);
 }
 
+/* ── BLACK + ELECTRIC BLUE PROFESSIONAL THEME ─────────────── */
 :root {
   --radius: 0.25rem;
-  --background: oklch(0.965 0.008 96);
-  --foreground: oklch(0.17 0.01 170);
-  --card: oklch(0.99 0.003 96);
-  --card-foreground: oklch(0.17 0.01 170);
-  --popover: oklch(0.99 0.003 96);
-  --popover-foreground: oklch(0.17 0.01 170);
-  --primary: oklch(0.78 0.21 126);
-  --primary-foreground: oklch(0.14 0.02 135);
-  --secondary: oklch(0.9 0.008 110);
-  --secondary-foreground: oklch(0.2 0.01 170);
-  --muted: oklch(0.92 0.008 105);
-  --muted-foreground: oklch(0.47 0.018 175);
-  --accent: oklch(0.78 0.21 126);
-  --accent-foreground: oklch(0.14 0.02 135);
+
+  /* Page background: near-black */
+  --background: oklch(0.08 0.005 240);
+  --foreground: oklch(0.93 0.01 220);
+
+  /* Card: slightly lighter than page */
+  --card: oklch(0.11 0.008 240);
+  --card-foreground: oklch(0.93 0.01 220);
+
+  --popover: oklch(0.11 0.008 240);
+  --popover-foreground: oklch(0.93 0.01 220);
+
+  /* Primary: Electric Blue */
+  --primary: oklch(0.65 0.22 250);
+  --primary-foreground: oklch(0.04 0.005 240);
+
+  --secondary: oklch(0.14 0.01 240);
+  --secondary-foreground: oklch(0.85 0.01 220);
+
+  --muted: oklch(0.14 0.008 240);
+  --muted-foreground: oklch(0.52 0.02 230);
+
+  --accent: oklch(0.65 0.22 250);
+  --accent-foreground: oklch(0.04 0.005 240);
+
   --destructive: oklch(0.58 0.23 27);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.82 0.012 125);
-  --input: oklch(0.82 0.012 125);
-  --ring: oklch(0.68 0.18 126);
-  --surface-dark: oklch(0.14 0.012 170);
-  --surface-foreground: oklch(0.96 0.006 105);
-  --surface-elevated: oklch(0.2 0.012 170);
-  --signal: oklch(0.78 0.21 126);
-  --signal-foreground: oklch(0.14 0.02 135);
-  --steel: oklch(0.61 0.016 190);
+
+  /* Border: subtle blue-tinted dark line */
+  --border: oklch(0.22 0.015 240);
+  --input: oklch(0.22 0.015 240);
+  --ring: oklch(0.65 0.22 250);
+
+  /* Dark surfaces */
+  --surface-dark: oklch(0.06 0.006 240);
+  --surface-foreground: oklch(0.93 0.01 220);
+  --surface-elevated: oklch(0.13 0.01 240);
+
+  /* Signal = Electric Blue accent */
+  --signal: oklch(0.65 0.22 250);
+  --signal-foreground: oklch(0.04 0.005 240);
+
+  /* Steel = muted blue-gray */
+  --steel: oklch(0.38 0.04 240);
 }
 
 @layer base {
@@ -97,20 +176,20 @@
 /* ── Technical grid utility ─────────────────────────────────────── */
 @utility technical-grid {
   background-image:
-    linear-gradient(color-mix(in oklab, var(--color-steel) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklab, var(--color-signal) 6%, transparent) 1px, transparent 1px),
     linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-steel) 12%, transparent) 1px,
+      color-mix(in oklab, var(--color-signal) 6%, transparent) 1px,
       transparent 1px
     );
   background-size: 40px 40px;
 }
 
-/* ── Animated signal line ────────────────────────────────────────── */
+/* ── Animated signal line (blue pulse) ───────────────────────────── */
 @utility signal-line {
   background-image: linear-gradient(90deg, transparent, var(--color-signal), transparent);
   background-size: 200% 100%;
-  animation: signal-flow 3s linear infinite;
+  animation: signal-flow 2.5s linear infinite;
 }
 
 @keyframes signal-flow {
@@ -119,11 +198,16 @@
   }
 }
 
+/* ── Blue glow utility ───────────────────────────────────────────── */
+@utility blue-glow {
+  box-shadow: 0 0 20px oklch(0.65 0.22 250 / 0.35), 0 0 60px oklch(0.65 0.22 250 / 0.1);
+}
+
 /* ── Rise / fade-up animations ───────────────────────────────────── */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -152,7 +236,6 @@
   }
 }
 
-/* Used with JS IntersectionObserver or directly when entering viewport */
 .reveal {
   animation: reveal 0.6s ease-out both;
 }
@@ -164,6 +247,19 @@
 }
 .reveal-delay-3 {
   animation: reveal 0.6s 0.3s ease-out both;
+}
+
+/* ── Blue pulse animation for CTA buttons ────────────────────────── */
+@keyframes blue-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.65 0.22 250 / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px oklch(0.65 0.22 250 / 0);
+  }
+}
+.pulse-blue {
+  animation: blue-pulse 2s ease-in-out infinite;
 }
 
 /* ── FAQ smooth open/close ───────────────────────────────────────── */
@@ -182,17 +278,33 @@ details[open] > summary .faq-chevron {
 
 /* ── Hover card lift ─────────────────────────────────────────────── */
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -8px oklch(0.14 0.012 170 / 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px -8px oklch(0.65 0.22 250 / 0.25);
 }
 
 /* ── Focus ring for interactive elements ─────────────────────────── */
 .focus-ring:focus-visible {
   outline: 2px solid var(--color-signal);
   outline-offset: 3px;
+}
+
+/* ── Scrollbar styling ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.65 0.22 250 / 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0.22 250 / 0.7);
 }
 
 /* ── Reduced motion overrides ────────────────────────────────────── */

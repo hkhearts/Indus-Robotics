@@ -40,6 +40,13 @@ import { RoboticsAssistant } from "@/components/chatbot/RoboticsAssistant";
 
 import { companyConfig } from "@/data/config";
 
+import { IntelligenceProvider, useIntelligence } from "@/components/intelligence/IntelligenceProvider";
+import { GeoGreetingBar } from "@/components/intelligence/GeoGreetingBar";
+import { WelcomeBanner } from "@/components/intelligence/WelcomeBanner";
+import { ChatBot } from "@/components/intelligence/ChatBot";
+import { ExitIntentPopup } from "@/components/intelligence/ExitIntentPopup";
+import { ThemeToggle } from "@/components/intelligence/ThemeToggle";
+
 /* =====================================================
    PROFESSIONAL 404 COMPONENT
 ===================================================== */
@@ -207,18 +214,18 @@ export const Route = createRootRouteWithContext<{
       },
 
       {
-        title: "INDUS Industrial Robotics — Precision Motion & Automation Technology",
+        title: "Indus Robotics",
       },
 
       {
         name: "description",
         content:
-          "INDUS Industrial Robotics delivers robotic components, precision reducers, actuators, motion control, and connected automation platforms for manufacturing.",
+          "Indus Robotics delivers robotic components, precision reducers, actuators, motion control, and connected automation platforms for manufacturing.",
       },
 
       {
         name: "author",
-        content: "INDUS Industrial Robotics",
+        content: "Indus Robotics",
       },
 
       {
@@ -251,7 +258,7 @@ export const Route = createRootRouteWithContext<{
 
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap",
       },
 
       {
@@ -514,26 +521,44 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <div className="flex min-h-screen flex-col">
-          <Header />
+        <IntelligenceProvider>
+          <IntelligenceLayout>
+            <div className="flex min-h-screen flex-col">
+              <GeoGreetingBar visitorData={null} />
+              <Header />
 
-          <Breadcrumbs />
+              <Breadcrumbs />
 
-          <main className="flex-1 pb-16 md:pb-0">
-            <Outlet />
-          </main>
+              <main className="flex-1 pb-16 md:pb-0">
+                <Outlet />
+              </main>
 
-          <PageQuickBar />
+              <PageQuickBar />
 
-          <Footer />
+              <Footer />
 
-          <WhatsAppButton />
+              <WhatsAppButton />
 
-          <RoboticsAssistant />
+              <GlobalModals />
 
-          <GlobalModals />
-        </div>
+              {/* Intelligence Layer */}
+              <WelcomeBanner />
+              <ExitIntentPopup />
+            </div>
+          </IntelligenceLayout>
+        </IntelligenceProvider>
       </ModalProvider>
     </QueryClientProvider>
+  );
+}
+
+// Inner component so it can use useIntelligence hook
+function IntelligenceLayout({ children }: { children: React.ReactNode }) {
+  const { visitor } = useIntelligence();
+  return (
+    <>
+      {children}
+      <ChatBot visitorData={visitor} />
+    </>
   );
 }

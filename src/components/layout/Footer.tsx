@@ -384,7 +384,7 @@ export function Footer() {
                   to="/about"
                   className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
                 >
-                  About INDUS
+                  About Indus Robotics
                 </Link>
               </li>
               <li>
@@ -448,7 +448,7 @@ export function Footer() {
             <span className="grid size-6 place-items-center border border-signal text-signal">
               <Move3d size={14} />
             </span>
-            <span>© 2026 {companyConfig.brandName} Industrial Robotics. All rights reserved.</span>
+            <span>© 2026 Indus Robotics. All rights reserved.</span>
           </div>
           <div className="flex gap-6">
             <span>Precision</span>

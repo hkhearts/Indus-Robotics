@@ -1,24 +1,23 @@
 /**
- * Global Configuration for INDUS Industrial Robotics
+ * Global Configuration for Indus Robotics
  * Centralizes company metadata, contact information, and WhatsApp messaging.
  */
 
 export const companyConfig = {
-  brandName: "INDUS",
-  fullName: "INDUS Industrial Robotics",
+  brandName: "Indus Robotics",
+  fullName: "Indus Robotics",
   tagline: "Precision · Motion · Control · Reliability · Automation · Intelligence",
 
-  // WhatsApp Configuration (Section 28)
-  // Set to official WhatsApp business number when available.
-  whatsAppNumber: "+1234567890", // [Add WhatsApp number]
-  displayWhatsApp: "+1 (234) 567-890", // [Add WhatsApp number]
+  // WhatsApp Configuration
+  whatsAppNumber: "+919361249474",
+  displayWhatsApp: "+91 93612 49474",
 
   // Contact Channels
-  email: "engineering@indus-robotics.com", // [Add email address]
+  email: "engineering@indus-robotics.com",
   salesEmail: "rfq@indus-robotics.com",
-  phone: "+1 (800) 555-0199", // [Add phone number]
-  headquarters: "Industrial Automation Park, Tech Corridor", // [Add physical address]
-  supportHours: "Mon – Fri: 08:00 – 18:00 (EST)",
+  phone: "+91 93612 49474",
+  headquarters: "Industrial Automation Park, Tech Corridor",
+  supportHours: "Mon – Fri: 09:00 – 18:00 (IST)",
 
   // Helper to generate contextual WhatsApp URL with pre-filled enquiry message
   getWhatsAppUrl: (context?: {
@@ -26,14 +25,14 @@ export const companyConfig = {
     name?: string;
   }) => {
     let message =
-      "Hello INDUS team, I would like to know more about your industrial robotics solutions.";
+      "Hello Indus Robotics team, I would like to know more about your industrial robotics solutions.";
 
     if (context?.type === "product" && context.name) {
-      message = `Hello INDUS team, I am interested in ${context.name}. I would like more technical information.`;
+      message = `Hello Indus Robotics team, I am interested in ${context.name}. I would like more technical information.`;
     } else if (context?.type === "application" && context.name) {
-      message = `Hello INDUS team, I am exploring robotics solutions for ${context.name}. I would like to discuss my requirement.`;
+      message = `Hello Indus Robotics team, I am exploring robotics solutions for ${context.name}. I would like to discuss my requirement.`;
     } else if (context?.type === "solution" && context.name) {
-      message = `Hello INDUS team, I would like to discuss implementing ${context.name} for our facility.`;
+      message = `Hello Indus Robotics team, I would like to discuss implementing ${context.name} for our facility.`;
     } else if (context?.type === "custom" && context.name) {
       message = context.name;
     }
