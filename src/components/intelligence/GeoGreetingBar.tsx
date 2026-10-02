@@ -19,9 +19,9 @@ export function GeoGreetingBar({ visitorData }: GeoGreetingBarProps) {
     // Poll every 60 seconds
     const interval = setInterval(() => getTrafficStats().then(setTraffic), 60_000);
 
-    // Live clock in visitor's timezone
+    // Live clock in visitor's timezone (using browser native time)
     const updateClock = () => {
-      const tz = visitorData?.geo?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const now = new Date().toLocaleTimeString("en-US", {
         timeZone: tz,
         hour: "2-digit",
@@ -39,10 +39,7 @@ export function GeoGreetingBar({ visitorData }: GeoGreetingBarProps) {
     };
   }, [visitorData]);
 
-  const greeting = getGeoGreeting(visitorData?.geo?.timezone);
-  const location = visitorData?.geo?.city
-    ? `${visitorData.geo.city}, ${visitorData.geo.country}`
-    : "";
+  const greeting = getGeoGreeting();
 
   return (
     <div className="border-b border-border/50 bg-card/60 px-5 py-1.5 lg:px-10">
@@ -52,12 +49,6 @@ export function GeoGreetingBar({ visitorData }: GeoGreetingBarProps) {
           <Globe size={12} className="shrink-0 text-signal" />
           <p className="text-[10px] text-muted-foreground">
             <span className="font-semibold text-foreground">{greeting}</span>
-            {location && (
-              <>
-                {" "}
-                · <span className="text-signal">{location}</span>
-              </>
-            )}
             {currentTime && (
               <>
                 {" "}

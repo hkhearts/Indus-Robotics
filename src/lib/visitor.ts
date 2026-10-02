@@ -31,10 +31,9 @@ const STORAGE_KEY = "ir_visitor";
 const PREFS_KEY = "ir_prefs";
 
 // ── Geo-aware greeting ─────────────────────────────────────────────────────
-export function getGeoGreeting(timezone?: string): string {
-  const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: tz }));
-  const hour = now.getHours();
+export function getGeoGreeting(): string {
+  if (typeof window === "undefined") return "Good morning";
+  const hour = new Date().getHours();
 
   if (hour >= 5 && hour < 12) return "Good morning";
   if (hour >= 12 && hour < 17) return "Good afternoon";

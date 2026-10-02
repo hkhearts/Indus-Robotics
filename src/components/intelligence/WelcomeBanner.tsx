@@ -38,7 +38,7 @@ export function WelcomeBanner() {
 
   if (!visible || dismissed || !visitor) return null;
 
-  const greeting = getGeoGreeting(visitor.geo?.timezone);
+  const greeting = getGeoGreeting();
   const isNewUser = !visitor.isReturning;
   const lastPageName = visitor.lastPage
     ? visitor.lastPage.replace(/^\//, "").replace(/-/g, " ") || "home"
