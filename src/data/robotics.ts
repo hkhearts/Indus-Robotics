@@ -102,7 +102,7 @@ export const categories: Category[] = [
       "Mounting envelope, orientation, and environmental conditions",
     ],
     card: "Actuators convert electrical input into controlled linear or rotary motion. They define how accurately and how repeatably a robotic axis moves, and are used in robotic joints, positioning systems, handling mechanisms, and automated machinery.",
-    image: "components",
+    image: "actuator",
     seoTitle: "Industrial Robotic Actuators | Linear, Rotary & Servo Actuators",
     seoDescription:
       "Explore robotic actuators for industrial automation — linear, rotary, electric, and servo actuators engineered for precise, repeatable robotic motion.",
@@ -185,7 +185,7 @@ export const categories: Category[] = [
       "Mounting interface with the motor and the driven structure",
     ],
     card: "Precision reducers reduce motor speed and multiply usable torque. In robotic joints they also contribute to controlled, repeatable movement, making them central to arms, rotary axes, and automated machinery.",
-    image: "components",
+    image: "reducer",
     seoTitle: "Precision Reducers | Planetary, Harmonic & Cycloidal",
     seoDescription:
       "Precision reducers for robotics: speed reduction, torque multiplication, and low-backlash motion for robotic joints, rotary axes, and automated machinery.",
@@ -441,7 +441,7 @@ export const categories: Category[] = [
       "Risk assessment and the safety concept for the cell",
     ],
     card: "Industrial robots automate production tasks such as assembly, welding, handling, palletising, and inspection, supporting consistent process execution and predictable cycle behaviour within integrated cells.",
-    image: "arm",
+    image: "industrial_robot",
     seoTitle: "Industrial Robots for Assembly, Welding, Handling & Palletizing",
     seoDescription:
       "Industrial robots for manufacturing automation — assembly, welding, material handling, palletising, and inspection within integrated production cells.",
