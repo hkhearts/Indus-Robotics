@@ -30,7 +30,7 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
       <button
         onClick={() => handleChange(next[current])}
         aria-label={`Switch theme (current: ${current})`}
-        className="flex size-9 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-signal hover:text-signal"
+        className="flex size-10 items-center justify-center text-surface-foreground hover:bg-surface-elevated hover:text-signal transition-colors rounded-sm"
         title={`Theme: ${current}`}
       >
         {icon}

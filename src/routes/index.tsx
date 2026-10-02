@@ -326,7 +326,7 @@ function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 1. HERO SECTION */}
-      <section className="relative flex min-h-[760px] items-end overflow-hidden bg-surface-dark pt-20 text-surface-foreground lg:min-h-[860px]">
+      <section className="relative flex min-h-[760px] items-end overflow-hidden bg-black pt-20 text-white lg:min-h-[860px]">
         <img
           src={heroImage}
           alt="Industrial robotic arm operating in a precision manufacturing cell"
@@ -345,10 +345,10 @@ function HomePage() {
             <p className="animate-rise text-xs font-bold uppercase tracking-[.24em] text-signal">
               Industrial Robotics · Precision Motion · Automation
             </p>
-            <h1 className="animate-rise-delay mt-6 font-display text-6xl font-bold uppercase leading-[.85] sm:text-7xl lg:text-[104px]">
+            <h1 className="animate-rise-delay mt-6 font-display text-6xl font-bold uppercase leading-[.85] sm:text-7xl lg:text-[104px] text-white">
               Powering the future of industrial robotics
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-8 text-surface-foreground/75 sm:text-lg">
+            <p className="mt-7 max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
               Advanced robotic components, precision reducers, and multi-axis control systems
               engineered for repeatable, high-reliability industrial automation.
             </p>
@@ -365,7 +365,7 @@ function HomePage() {
 
               <Button
                 variant="outline"
-                className="h-12 rounded-none border-signal/40 bg-transparent px-7 text-xs font-bold uppercase text-surface-foreground hover:bg-signal/10 hover:border-signal hover:text-signal"
+                className="h-12 rounded-none border-signal/40 bg-transparent px-7 text-xs font-bold uppercase text-white hover:bg-signal/10 hover:border-signal hover:text-signal"
                 onClick={() => openModal("engineer")}
               >
                 Talk to an Engineer
@@ -374,13 +374,13 @@ function HomePage() {
 
             <button
               onClick={handleWhatsApp}
-              className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-surface-foreground/50 transition-colors hover:text-signal"
+              className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.14em] text-white/50 transition-colors hover:text-signal"
             >
               <MessageSquare size={13} className="text-signal" />
               Chat on WhatsApp — +91 93612 49474
             </button>
 
-            <p className="mt-8 text-[10px] font-bold uppercase tracking-[.2em] text-surface-foreground/40">
+            <p className="mt-8 text-[10px] font-bold uppercase tracking-[.2em] text-white/40">
               {companyConfig.tagline}
             </p>
           </div>
