@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
@@ -32,6 +33,11 @@ import { Route as ProductsCategoryIdRouteImport } from './routes/products/$categ
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -129,6 +135,7 @@ const ProductsCategoryIdRoute = ProductsCategoryIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/search': typeof SearchRoute
   '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/search': typeof SearchRoute
   '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/search': typeof SearchRoute
   '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analytics'
     | '/search'
     | '/trends'
     | '/about/engineering'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/analytics'
     | '/search'
     | '/trends'
     | '/about/engineering'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/analytics'
     | '/search'
     | '/trends'
     | '/about/engineering'
@@ -259,6 +271,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   SearchRoute: typeof SearchRoute
   TrendsRoute: typeof TrendsRoute
   AboutEngineeringRoute: typeof AboutEngineeringRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -419,6 +439,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   SearchRoute: SearchRoute,
   TrendsRoute: TrendsRoute,
   AboutEngineeringRoute: AboutEngineeringRoute,
