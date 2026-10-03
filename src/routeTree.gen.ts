@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as AboutEngineeringRouteImport } from './routes/about/engineering'
 import { Route as ApplicationsIndexRouteImport } from './routes/applications/index'
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrendsRoute = TrendsRouteImport.update({
+  id: '/trends',
+  path: '/trends',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -124,6 +130,7 @@ const ProductsCategoryIdRoute = ProductsCategoryIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
   '/applications/$applicationId': typeof ApplicationsApplicationIdRoute
   '/contact/engineering-enquiry': typeof ContactEngineeringEnquiryRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
   '/applications/$applicationId': typeof ApplicationsApplicationIdRoute
   '/contact/engineering-enquiry': typeof ContactEngineeringEnquiryRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
+  '/trends': typeof TrendsRoute
   '/about/engineering': typeof AboutEngineeringRoute
   '/applications/$applicationId': typeof ApplicationsApplicationIdRoute
   '/contact/engineering-enquiry': typeof ContactEngineeringEnquiryRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/search'
+    | '/trends'
     | '/about/engineering'
     | '/applications/$applicationId'
     | '/contact/engineering-enquiry'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/search'
+    | '/trends'
     | '/about/engineering'
     | '/applications/$applicationId'
     | '/contact/engineering-enquiry'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/search'
+    | '/trends'
     | '/about/engineering'
     | '/applications/$applicationId'
     | '/contact/engineering-enquiry'
@@ -248,6 +260,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchRoute: typeof SearchRoute
+  TrendsRoute: typeof TrendsRoute
   AboutEngineeringRoute: typeof AboutEngineeringRoute
   ApplicationsApplicationIdRoute: typeof ApplicationsApplicationIdRoute
   ContactEngineeringEnquiryRoute: typeof ContactEngineeringEnquiryRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trends': {
+      id: '/trends'
+      path: '/trends'
+      fullPath: '/trends'
+      preLoaderRoute: typeof TrendsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/': {
@@ -400,6 +420,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRoute,
+  TrendsRoute: TrendsRoute,
   AboutEngineeringRoute: AboutEngineeringRoute,
   ApplicationsApplicationIdRoute: ApplicationsApplicationIdRoute,
   ContactEngineeringEnquiryRoute: ContactEngineeringEnquiryRoute,

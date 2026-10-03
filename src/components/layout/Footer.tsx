@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
-import { Move3d, ArrowRight, MessageSquare, Mail, Phone, MapPin } from "lucide-react";
+import { Move3d, ArrowRight, MessageSquare, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { companyConfig } from "@/data/config";
 import { useModals } from "@/components/modals/ModalContext";
