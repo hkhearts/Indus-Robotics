@@ -176,10 +176,7 @@ export function ContactIndexPage() {
                     <Mail size={14} className="text-signal shrink-0" />
                     <span>{companyConfig.salesEmail}</span>
                   </p>
-                  <p className="flex items-center gap-2">
-                    <Phone size={14} className="text-signal shrink-0" />
-                    <span>{companyConfig.phone}</span>
-                  </p>
+
                   <p className="flex items-center gap-2">
                     <CheckCircle2 size={14} className="text-signal shrink-0" />
                     <span>Volume pricing available</span>
@@ -212,10 +209,7 @@ export function ContactIndexPage() {
                 </p>
 
                 <div className="mt-6 space-y-2 border-t border-border/40 pt-4 text-xs text-muted-foreground">
-                  <p className="flex items-center gap-2">
-                    <Phone size={14} className="text-signal shrink-0" />
-                    <span>{companyConfig.displayWhatsApp}</span>
-                  </p>
+
                   <p className="flex items-center gap-2">
                     <Clock size={14} className="text-signal shrink-0" />
                     <span>Fast response during business hours</span>

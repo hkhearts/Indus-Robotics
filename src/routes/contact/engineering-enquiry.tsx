@@ -87,22 +87,7 @@ export function EngineeringEnquiryPage() {
               </p>
 
               <div className="mt-6 space-y-4">
-                <a
-                  href={`tel:${companyConfig.phone}`}
-                  className="flex items-center gap-3 border border-border p-3 text-xs transition-colors hover:border-signal hover:bg-muted/50"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center bg-muted text-foreground">
-                    <Phone size={15} />
-                  </div>
-                  <div>
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                      Direct Line
-                    </span>
-                    <span className="font-mono text-xs font-semibold text-foreground">
-                      {companyConfig.phone}
-                    </span>
-                  </div>
-                </a>
+
 
                 <a
                   href={`mailto:${companyConfig.salesEmail}`}

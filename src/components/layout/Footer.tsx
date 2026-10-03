@@ -434,10 +434,7 @@ export function Footer() {
                 <Mail size={13} className="text-signal" />
                 <span>{companyConfig.salesEmail}</span>
               </p>
-              <p className="flex items-center gap-2">
-                <Phone size={13} className="text-signal" />
-                <span>{companyConfig.phone}</span>
-              </p>
+
             </div>
           </div>
         </div>
