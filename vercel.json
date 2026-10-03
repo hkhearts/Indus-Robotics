@@ -44,23 +44,19 @@
   "crons": [
     {
       "path": "/api/report",
-      "schedule": "30 2 * * *",
-      "_comment": "Daily report — 08:00 IST (02:30 UTC)"
+      "schedule": "30 2 * * *"
     },
     {
       "path": "/api/report?type=weekly",
-      "schedule": "30 2 * * 1",
-      "_comment": "Weekly report — Monday 08:00 IST"
+      "schedule": "30 2 * * 1"
     },
     {
       "path": "/api/report?type=monthly",
-      "schedule": "30 2 1 * *",
-      "_comment": "Monthly report — 1st of month 08:00 IST"
+      "schedule": "30 2 1 * *"
     },
     {
       "path": "/api/trends",
-      "schedule": "0 0 * * *",
-      "_comment": "Google Trends radar scan — 05:30 IST daily"
+      "schedule": "0 0 * * *"
     }
   ]
 }
