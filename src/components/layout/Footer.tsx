@@ -12,6 +12,8 @@ export function Footer() {
     window.open(companyConfig.getWhatsAppUrl({ type: "general" }), "_blank", "noopener,noreferrer");
   };
 
+  const navLinkClass = "text-surface-foreground/65 transition-colors hover:text-surface-foreground";
+
   return (
     <footer className="border-t border-border/30 bg-surface-dark text-surface-foreground">
       {/* Top Banner CTA */}
@@ -53,60 +55,17 @@ export function Footer() {
       {/* Main Footer Links Columns */}
       <div className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
+
           {/* PRODUCTS COLUMN */}
           <div>
-            <h4 className="font-display text-base uppercase tracking-wider text-signal">
-              Products
-            </h4>
+            <h4 className="font-display text-base uppercase tracking-wider text-signal">Products</h4>
             <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  to="/products/actuators"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Actuators
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products/precision-reducers"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Precision Reducers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products/robotic-wheels"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Robotic Wheels
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products/robotic-arms"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Robotic Arms
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products/industrial-robots"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Industrial Robots
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products/control-systems"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Control Systems
-                </Link>
-              </li>
+              <li><a href="/products/actuators" className={navLinkClass}>Actuators</a></li>
+              <li><a href="/products/precision-reducers" className={navLinkClass}>Precision Reducers</a></li>
+              <li><a href="/products/robotic-wheels" className={navLinkClass}>Robotic Wheels</a></li>
+              <li><a href="/products/robotic-arms" className={navLinkClass}>Robotic Arms</a></li>
+              <li><a href="/products/industrial-robots" className={navLinkClass}>Industrial Robots</a></li>
+              <li><a href="/products/control-systems" className={navLinkClass}>Control Systems</a></li>
               <li className="pt-2">
                 <Link to="/products" className="font-bold uppercase text-signal hover:underline">
                   All Products →
@@ -117,260 +76,58 @@ export function Footer() {
 
           {/* SOLUTIONS COLUMN */}
           <div>
-            <h4 className="font-display text-base uppercase tracking-wider text-signal">
-              Solutions
-            </h4>
+            <h4 className="font-display text-base uppercase tracking-wider text-signal">Solutions</h4>
             <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  to="/solutions/factory-automation"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Factory Automation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/robotic-automation"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Robotic Automation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/motion-control"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Motion Control
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/mobile-robotics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Mobile Robotics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/smart-manufacturing"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Smart Manufacturing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/material-handling"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Material Handling
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/custom-robotics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Custom Robotics
-                </Link>
-              </li>
+              <li><a href="/solutions/factory-automation" className={navLinkClass}>Factory Automation</a></li>
+              <li><a href="/solutions/robotic-automation" className={navLinkClass}>Robotic Automation</a></li>
+              <li><a href="/solutions/motion-control" className={navLinkClass}>Motion Control</a></li>
+              <li><a href="/solutions/mobile-robotics" className={navLinkClass}>Mobile Robotics</a></li>
+              <li><a href="/solutions/smart-manufacturing" className={navLinkClass}>Smart Manufacturing</a></li>
+              <li><a href="/solutions/material-handling" className={navLinkClass}>Material Handling</a></li>
+              <li><a href="/solutions/custom-robotics" className={navLinkClass}>Custom Robotics</a></li>
             </ul>
           </div>
 
           {/* APPLICATIONS COLUMN */}
           <div>
-            <h4 className="font-display text-base uppercase tracking-wider text-signal">
-              Applications
-            </h4>
+            <h4 className="font-display text-base uppercase tracking-wider text-signal">Applications</h4>
             <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  to="/applications/automotive"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Automotive
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/electronics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/manufacturing"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Manufacturing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/warehousing"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Warehousing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/logistics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Logistics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/food-packaging"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Food & Packaging
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/pharmaceuticals"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Pharmaceuticals
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/applications/inspection"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Inspection & Quality
-                </Link>
-              </li>
+              <li><a href="/applications/automotive" className={navLinkClass}>Automotive</a></li>
+              <li><a href="/applications/electronics" className={navLinkClass}>Electronics</a></li>
+              <li><a href="/applications/manufacturing" className={navLinkClass}>Manufacturing</a></li>
+              <li><a href="/applications/warehousing" className={navLinkClass}>Warehousing</a></li>
+              <li><a href="/applications/logistics" className={navLinkClass}>Logistics</a></li>
+              <li><a href="/applications/food-packaging" className={navLinkClass}>Food &amp; Packaging</a></li>
+              <li><a href="/applications/pharmaceuticals" className={navLinkClass}>Pharmaceuticals</a></li>
+              <li><a href="/applications/inspection" className={navLinkClass}>Inspection &amp; Quality</a></li>
             </ul>
           </div>
 
           {/* TECHNOLOGY COLUMN */}
           <div>
-            <h4 className="font-display text-base uppercase tracking-wider text-signal">
-              Technology
-            </h4>
+            <h4 className="font-display text-base uppercase tracking-wider text-signal">Technology</h4>
             <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  to="/technology/robotics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Robotics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/motion-control"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Motion Control
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/servo"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Servo Technology
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/automation"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Industrial Automation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/sensors"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Sensors & Feedback
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/ai-robotics"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  AI Robotics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/technology/industry-4"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Industry 4.0
-                </Link>
-              </li>
+              <li><a href="/technology/robotics" className={navLinkClass}>Robotics</a></li>
+              <li><a href="/technology/motion-control" className={navLinkClass}>Motion Control</a></li>
+              <li><a href="/technology/servo" className={navLinkClass}>Servo Technology</a></li>
+              <li><a href="/technology/automation" className={navLinkClass}>Industrial Automation</a></li>
+              <li><a href="/technology/sensors" className={navLinkClass}>Sensors &amp; Feedback</a></li>
+              <li><a href="/technology/ai-robotics" className={navLinkClass}>AI Robotics</a></li>
+              <li><a href="/technology/industry-4" className={navLinkClass}>Industry 4.0</a></li>
             </ul>
           </div>
 
           {/* RESOURCES COLUMN */}
           <div>
-            <h4 className="font-display text-base uppercase tracking-wider text-signal">
-              Resources
-            </h4>
+            <h4 className="font-display text-base uppercase tracking-wider text-signal">Resources</h4>
             <ul className="mt-4 space-y-2 text-xs">
+              <li><a href="/resources?type=catalogue" className={navLinkClass}>Catalogues</a></li>
+              <li><a href="/resources?type=datasheet" className={navLinkClass}>Datasheets</a></li>
+              <li><a href="/resources?type=app-note" className={navLinkClass}>Application Notes</a></li>
+              <li><a href="/resources?type=case-study" className={navLinkClass}>Case Studies</a></li>
+              <li><a href="/resources?type=article" className={navLinkClass}>Technical Articles</a></li>
               <li>
-                <Link
-                  to="/resources?type=catalogue"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Catalogues
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/resources?type=datasheet"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Datasheets
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/resources?type=app-note"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Application Notes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/resources?type=case-study"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Case Studies
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/resources?type=article"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Technical Articles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/resources/faqs"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  FAQs & Knowledge Base
-                </Link>
+                <Link to="/resources/faqs" className={navLinkClass}>FAQs &amp; Knowledge Base</Link>
               </li>
             </ul>
           </div>
@@ -379,50 +136,15 @@ export function Footer() {
           <div>
             <h4 className="font-display text-base uppercase tracking-wider text-signal">Company</h4>
             <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  to="/about"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  About Indus Robotics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about/engineering"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Engineering Approach
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/careers"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Careers & Profiles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Contact Hub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact/engineering-enquiry"
-                  className="text-surface-foreground/65 transition-colors hover:text-surface-foreground"
-                >
-                  Engineering RFQ Form
-                </Link>
-              </li>
+              <li><Link to="/about" className={navLinkClass}>About Indus Robotics</Link></li>
+              <li><Link to="/about/engineering" className={navLinkClass}>Engineering Approach</Link></li>
+              <li><Link to="/careers" className={navLinkClass}>Careers &amp; Profiles</Link></li>
+              <li><Link to="/contact" className={navLinkClass}>Contact Hub</Link></li>
+              <li><Link to="/contact/engineering-enquiry" className={navLinkClass}>Engineering RFQ Form</Link></li>
               <li>
                 <button
                   onClick={() => openModal("engineer")}
-                  className="text-left text-surface-foreground/65 transition-colors hover:text-surface-foreground"
+                  className={`text-left ${navLinkClass}`}
                 >
                   Consult an Engineer
                 </button>
@@ -434,9 +156,9 @@ export function Footer() {
                 <Mail size={13} className="text-signal" />
                 <span>{companyConfig.salesEmail}</span>
               </p>
-
             </div>
           </div>
+
         </div>
 
         {/* Bottom Line */}

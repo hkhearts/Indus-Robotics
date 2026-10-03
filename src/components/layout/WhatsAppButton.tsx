@@ -13,16 +13,16 @@ export function WhatsAppButton() {
 
     const parts = pathname.split("/").filter(Boolean);
     if (parts.length > 0) {
-      const last = parts[parts.length - 1].replace(/-/g, " ");
+      const last = (parts[parts.length - 1] ?? "").replace(/-/g, " ");
       if (pathname.startsWith("/products")) {
         type = "product";
-        name = last;
+        name = last || undefined;
       } else if (pathname.startsWith("/applications")) {
         type = "application";
-        name = last;
+        name = last || undefined;
       } else if (pathname.startsWith("/solutions")) {
         type = "solution";
-        name = last;
+        name = last || undefined;
       }
     }
 
