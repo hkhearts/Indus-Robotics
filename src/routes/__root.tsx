@@ -360,9 +360,38 @@ function RootComponent() {
   useEffect(() => {
     trackDigitalPresence("page_view", "page", pathname);
 
-    // Tag Clarity with current page for heatmap segmentation
+    // ── Rich Clarity tagging for heatmap segmentation ──────────────────────
     try {
-      Clarity.setTag("page", pathname);
+      const parts = pathname.split("/").filter(Boolean);
+      const section = parts[0] ?? "home";
+      const subPage = parts[1] ?? "";
+
+      // Page section tag (products | solutions | applications | contact | etc.)
+      Clarity.setTag("page_section", section || "home");
+      Clarity.setTag("page_path", pathname);
+
+      // Derive page_type for funnel analysis
+      let pageType = "general";
+      if (pathname === "/") pageType = "homepage";
+      else if (section === "products") pageType = parts.length > 1 ? "product_detail" : "product_listing";
+      else if (section === "solutions") pageType = parts.length > 1 ? "solution_detail" : "solution_listing";
+      else if (section === "applications") pageType = parts.length > 1 ? "application_detail" : "application_listing";
+      else if (section === "contact") pageType = "contact";
+      else if (section === "about") pageType = "about";
+      else if (section === "careers") pageType = "careers";
+      else if (section === "resources") pageType = "resources";
+      else if (section === "trends") pageType = "analytics";
+      Clarity.setTag("page_type", pageType);
+
+      // Product / solution category tag
+      if (subPage) {
+        Clarity.setTag("content_category", subPage.replace(/-/g, " "));
+      }
+
+      // Device type tag
+      const isMobile = window.innerWidth < 768;
+      Clarity.setTag("device_type", isMobile ? "mobile" : "desktop");
+
       Clarity.event("page_view");
     } catch (e) {
       // Clarity not ready — ignore
@@ -372,10 +401,10 @@ function RootComponent() {
 
     if (!sessionStarted) {
       trackDigitalPresence("session_start", "session", "New website session");
-
       sessionStorage.setItem("indus_session_started", "true");
     }
   }, [pathname]);
+
 
   /* ---------------------------------------------
      CLICK TRACKING
