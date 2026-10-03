@@ -10,7 +10,12 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+
+import Clarity from "@microsoft/clarity";
+
+// Microsoft Clarity project ID
+const CLARITY_PROJECT_ID = "yru44ykfxv";
 
 import { ArrowRight, Search, MessageSquare, AlertTriangle, Home } from "lucide-react";
 
@@ -268,6 +273,18 @@ export const Route = createRootRouteWithContext<{
         href: "/favicon.ico",
         type: "image/x-icon",
       },
+
+      // Microsoft Clarity CDN prefetch for faster script load
+      {
+        rel: "dns-prefetch",
+        href: "https://www.clarity.ms",
+      },
+
+      // Preconnect to Jira & Sheets for API calls
+      {
+        rel: "preconnect",
+        href: "https://trustworkz.atlassian.net",
+      },
     ],
   }),
 
@@ -307,6 +324,26 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const clarityInitialized = useRef(false);
+
+  /* ---------------------------------------------
+     MICROSOFT CLARITY — INIT ONCE
+  --------------------------------------------- */
+
+  useEffect(() => {
+    if (clarityInitialized.current) return;
+    clarityInitialized.current = true;
+
+    try {
+      Clarity.init(CLARITY_PROJECT_ID);
+      // Tag session with visitor type for segmentation
+      const visitorType = sessionStorage.getItem("indus_visited") ? "returning" : "new";
+      Clarity.setTag("visitor_type", visitorType);
+      Clarity.setTag("site", "indus-robotics");
+    } catch (e) {
+      // Clarity blocked by adblocker — fail silently
+    }
+  }, []);
 
   /* ---------------------------------------------
      GET CURRENT PAGE PATH
@@ -322,6 +359,14 @@ function RootComponent() {
 
   useEffect(() => {
     trackDigitalPresence("page_view", "page", pathname);
+
+    // Tag Clarity with current page for heatmap segmentation
+    try {
+      Clarity.setTag("page", pathname);
+      Clarity.event("page_view");
+    } catch (e) {
+      // Clarity not ready — ignore
+    }
 
     const sessionStarted = sessionStorage.getItem("indus_session_started");
 
@@ -449,7 +494,7 @@ function RootComponent() {
   }, []);
 
   /* ---------------------------------------------
-     FORM SUBMISSION TRACKING
+     FORM SUBMISSION TRACKING + CLARITY EVENTS
   --------------------------------------------- */
 
   useEffect(() => {
@@ -464,6 +509,15 @@ function RootComponent() {
         form.getAttribute("name") || form.id || form.getAttribute("aria-label") || "Website Form";
 
       trackDigitalPresence("form_submission", formName, "Form submitted");
+
+      // Upgrade Clarity session to ensure this form submission is recorded
+      try {
+        Clarity.upgrade("form_submission");
+        Clarity.event("lead_captured");
+        Clarity.setTag("form", formName);
+      } catch (e) {
+        // Clarity not ready
+      }
     };
 
     document.addEventListener("submit", handleSubmit);

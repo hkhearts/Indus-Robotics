@@ -58,7 +58,7 @@ export default async function handler(req, res) {
           },
           body: JSON.stringify({
             fields: {
-              project: { key: JIRA_PROJECT_KEY || "KAN" },
+              project: { key: JIRA_PROJECT_KEY || "DI" },
               summary: `[Traffic Alert] ${activeUsers} concurrent users — Consider scaling`,
               description: {
                 version: 1,

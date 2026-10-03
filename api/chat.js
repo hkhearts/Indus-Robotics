@@ -89,7 +89,7 @@ async function createEscalationTicket(message, visitorCtx) {
       headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
         fields: {
-          project: { key: JIRA_PROJECT_KEY || "KAN" },
+          project: { key: JIRA_PROJECT_KEY || "DI" },
           summary: `[Chat Escalation] Complex kinematics question — ${visitorCtx?.ip || "unknown IP"}`,
           description: { version: 1, type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: `Visitor: ${visitorCtx?.ip} (${visitorCtx?.geo?.city}, ${visitorCtx?.geo?.country}). Company: ${visitorCtx?.firmographic?.companyName || "unknown"}. Question: ${message}` }] }] },
           issuetype: { name: "Task" },

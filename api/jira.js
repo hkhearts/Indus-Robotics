@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   const domain = process.env.JIRA_DOMAIN;       // e.g. harikrishnanint2027g3.atlassian.net
   const email = process.env.JIRA_EMAIL;          // harikrishnan.int2027g3@gmail.com
   const token = process.env.JIRA_API_TOKEN;
-  const projectKey = process.env.JIRA_PROJECT_KEY || "KAN";
+  const projectKey = process.env.JIRA_PROJECT_KEY || "DI";
 
   if (!domain || !email || !token) {
     return res.status(500).json({
