@@ -211,7 +211,7 @@ export default async function handler(req, res) {
             },
           ],
         },
-        issuetype: { name: "Subtask" },
+        issuetype: { name: "Sub-task" },
         parent: { key: mainIssueKey },
         priority: { name: "Medium" },
         labels: ["digital-presence", "website-lead"],
