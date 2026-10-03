@@ -38,21 +38,23 @@ import { Footer } from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 
 import { PageQuickBar } from "@/components/layout/PageQuickBar";
-
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
-
-import { RoboticsAssistant } from "@/components/chatbot/RoboticsAssistant";
-
 import { companyConfig } from "@/data/config";
-
 import { IntelligenceProvider, useIntelligence } from "@/components/intelligence/IntelligenceProvider";
 import { MaintenanceBanner } from "@/components/intelligence/MaintenanceBanner";
 import { SharedWorkspacePrompt } from "@/components/intelligence/SharedWorkspacePrompt";
 import { GeoGreetingBar } from "@/components/intelligence/GeoGreetingBar";
 import { WelcomeBanner } from "@/components/intelligence/WelcomeBanner";
-import { ChatBot } from "@/components/intelligence/ChatBot";
-import { ExitIntentPopup } from "@/components/intelligence/ExitIntentPopup";
 import { ThemeToggle } from "@/components/intelligence/ThemeToggle";
+
+// ── Lazily loaded heavy components — deferred after initial paint ───────────
+import { lazy, Suspense } from "react";
+const ChatBot = lazy(() =>
+  import("@/components/intelligence/ChatBot").then((m) => ({ default: m.ChatBot }))
+);
+const ExitIntentPopup = lazy(() =>
+  import("@/components/intelligence/ExitIntentPopup").then((m) => ({ default: m.ExitIntentPopup }))
+);
 
 /* =====================================================
    PROFESSIONAL 404 COMPONENT
@@ -252,20 +254,26 @@ export const Route = createRootRouteWithContext<{
         href: appCss,
       },
 
+      // Only 2 preconnects — Lighthouse warns on >4
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",
       },
-
       {
         rel: "preconnect",
         href: "https://fonts.gstatic.com",
         crossOrigin: "anonymous",
       },
 
+      // Non-render-blocking font load — display=swap prevents FCP penalty
+      {
+        rel: "preload",
+        as: "style",
+        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&family=Barlow+Condensed:wght@600;700;800&display=swap",
+      },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&family=Barlow+Condensed:wght@600;700;800&display=swap",
       },
 
       {
@@ -274,17 +282,10 @@ export const Route = createRootRouteWithContext<{
         type: "image/x-icon",
       },
 
-      // Microsoft Clarity CDN prefetch for faster script load
-      {
-        rel: "dns-prefetch",
-        href: "https://www.clarity.ms",
-      },
-
-      // Preconnect to Jira & Sheets for API calls
-      {
-        rel: "preconnect",
-        href: "https://trustworkz.atlassian.net",
-      },
+      // dns-prefetch only (cheaper than preconnect for non-critical origins)
+      { rel: "dns-prefetch", href: "https://www.clarity.ms" },
+      { rel: "dns-prefetch", href: "https://trustworkz.atlassian.net" },
+      { rel: "dns-prefetch", href: "https://www.google-analytics.com" },
     ],
   }),
 
@@ -630,7 +631,9 @@ function RootComponent() {
 
               {/* Intelligence Layer */}
               <WelcomeBanner />
-              <ExitIntentPopup />
+              <Suspense fallback={null}>
+                <ExitIntentPopup />
+              </Suspense>
             </div>
           </IntelligenceLayout>
         </IntelligenceProvider>
@@ -645,7 +648,9 @@ function IntelligenceLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <ChatBot visitorData={visitor} />
+      <Suspense fallback={null}>
+        <ChatBot visitorData={visitor} />
+      </Suspense>
     </>
   );
 }
