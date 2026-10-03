@@ -43,7 +43,7 @@ export function WhatsAppButton() {
         <span className="relative inline-flex size-2.5 rounded-full bg-signal" />
       </span>
       <MessageSquare size={16} className="text-signal" />
-      <span className="hidden sm:inline">WhatsApp · +91 93612 49474</span>
+      <span className="hidden sm:inline">WhatsApp</span>
       <span className="sm:hidden">WhatsApp</span>
     </button>
   );
