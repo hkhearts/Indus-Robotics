@@ -6,6 +6,11 @@
   "installCommand": "npm install",
   "framework": null,
   "rewrites": [
+    { "source": "/api/smart-bom", "destination": "/api/intel?type=smart-bom" },
+    { "source": "/api/supply-chain", "destination": "/api/intel?type=supply-chain" },
+    { "source": "/api/predictive-maintenance", "destination": "/api/intel?type=predictive-maintenance" },
+    { "source": "/api/report", "destination": "/api/cron?action=report" },
+    { "source": "/api/trends", "destination": "/api/cron?action=trends" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "headers": [
@@ -43,19 +48,19 @@
   ],
   "crons": [
     {
-      "path": "/api/report",
+      "path": "/api/cron?action=report",
       "schedule": "30 2 * * *"
     },
     {
-      "path": "/api/report?type=weekly",
+      "path": "/api/cron?action=report&type=weekly",
       "schedule": "30 2 * * 1"
     },
     {
-      "path": "/api/report?type=monthly",
+      "path": "/api/cron?action=report&type=monthly",
       "schedule": "30 2 1 * *"
     },
     {
-      "path": "/api/trends",
+      "path": "/api/cron?action=trends",
       "schedule": "0 0 * * *"
     }
   ]
